@@ -16,8 +16,11 @@ class SOULSLIKEGAME_API ABaseCharacter : public ACharacter
 	//---------------------변수----------------------------//
 private:
 	// GameplayAbilitySystemComponent 변수
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS | Component", meta = (AllowPrivateAccess = "true"))
-	USoluslikeAbilitySystemComponent* SoluslikeGASCompoent;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS | Component", meta = (AllowPrivateAccess = "true"))
+	USoluslikeAbilitySystemComponent* SoulslikeGASCompoent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS | Attribute", meta = (AllowPrivateAccess = "true"))
+	const class USoulslikeAttributeSetBase* AttributeSetVar;
 	
 
 	//----------------------함수-------------------------//
@@ -31,6 +34,15 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	/// <summary>
+	/// 빙의 시 호출
+	/// </summary>
+	virtual void PossessedBy(AController* NewController) override;
+
+	/// <summary>
+	/// 플레이어 스태이트 변경
+	/// </summary>
+	virtual void OnRep_PlayerState() override;
 
 protected:
 	// Called when the game starts or when spawned

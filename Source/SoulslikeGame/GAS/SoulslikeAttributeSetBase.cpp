@@ -57,3 +57,14 @@ void USoulslikeAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProp
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulslikeAttributeSetBase, SP, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulslikeAttributeSetBase, Mana, COND_None, REPNOTIFY_Always);
 }
+
+
+void USoulslikeAttributeSetBase::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	UE_LOG(LogTemp, Warning, TEXT("PreAttributeChange"));
+}
+
+void USoulslikeAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("PostGameplayEffectExecute"));
+}
