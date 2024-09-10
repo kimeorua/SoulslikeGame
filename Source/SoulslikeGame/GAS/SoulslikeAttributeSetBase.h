@@ -44,6 +44,11 @@ public:
 	FGameplayAttributeData Concentration;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, Concentration)
 
+	//스탯의 최대 값
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_MaxStat)
+	FGameplayAttributeData MaxStat;
+	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, MaxStat)
+
 	// 실질적인 플레이어의 체력
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_HP)
 	FGameplayAttributeData HP;
@@ -85,8 +90,10 @@ public:
 	UFUNCTION()
 	virtual void OnRep_Mana(const FGameplayAttributeData& OldMana);
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	UFUNCTION()
+	virtual void OnRep_MaxStat(const FGameplayAttributeData& OldMaxStat);
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data)override;

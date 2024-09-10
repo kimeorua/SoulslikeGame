@@ -13,5 +13,7 @@ UCLASS()
 class SOULSLIKEGAME_API USoluslikeAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
-	
+
+public:
+	bool StartupEffectApplied = false;
 };

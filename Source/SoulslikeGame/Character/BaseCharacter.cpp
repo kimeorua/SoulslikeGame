@@ -5,6 +5,33 @@
 #include "SoulslikeGame/GAS/SoluslikeAbilitySystemComponent.h"
 #include "SoulslikeGame/GAS/SoulslikeAttributeSetBase.h"
 
+void ABaseCharacter::Initalize()
+{
+	if (!IsValid(SoulslikeGASCompoent) || GetLocalRole() != ROLE_Authority || SoulslikeGASCompoent->StartupEffectApplied)
+	{
+		return;
+	}
+
+	FGameplayEffectContextHandle EffectContext = SoulslikeGASCompoent->MakeEffectContext();
+	EffectContext.AddSourceObject(this);
+
+	for (TSubclassOf<UGameplayEffect> Effect : InitEffects)
+	{
+		FGameplayEffectSpecHandle NewHandle = SoulslikeGASCompoent->MakeOutgoingSpec(Effect, 1, EffectContext);
+
+		if (NewHandle.IsValid())
+		{
+			SoulslikeGASCompoent->ApplyGameplayEffectSpecToTarget(*NewHandle.Data.Get(), SoulslikeGASCompoent);
+		}
+	}
+	SoulslikeGASCompoent->StartupEffectApplied = true;
+}
+
+void ABaseCharacter::initalizeAbilities()
+{
+	GiveAbilityMulity(DefaultAbility);
+}
+
 // Sets default values
 ABaseCharacter::ABaseCharacter()
 {
@@ -31,7 +58,22 @@ void ABaseCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 	SoulslikeGASCompoent->InitAbilityActorInfo(this, this);
 
-	//initalize
+	//기본 Gameplay Effect, GameplayAbility 적용
+	Initalize();
+	initalizeAbilities();
+}
+
+void ABaseCharacter::GiveAbilitySingle(TSubclassOf<class UGameplayAbility> AbilityToGet, int32 AbilityLevel)
+{
+	if (HasAuthority()) { SoulslikeGASCompoent->GiveAbility(FGameplayAbilitySpec(AbilityToGet, AbilityLevel)); }
+}
+
+void ABaseCharacter::GiveAbilityMulity(TArray<TSubclassOf<class UGameplayAbility>> AddedAbilities)
+{
+	for (TSubclassOf<class UGameplayAbility> Ability : AddedAbilities)
+	{
+		GiveAbilitySingle(Ability, 1);
+	}
 }
 
 // Called when the game starts or when spawned
@@ -42,7 +84,10 @@ void ABaseCharacter::BeginPlay()
 	if (IsValid(SoulslikeGASCompoent))
 	{
 		AttributeSetVar = SoulslikeGASCompoent->GetSet<USoulslikeAttributeSetBase>();
-		//initalize
+
+		//기본 Gameplay Effect, GameplayAbility 적용
+		Initalize();
+		initalizeAbilities();
 	}
 }
 
@@ -57,6 +102,5 @@ void ABaseCharacter::Tick(float DeltaTime)
 void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 

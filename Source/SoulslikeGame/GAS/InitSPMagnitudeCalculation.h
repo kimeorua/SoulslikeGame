@@ -13,5 +13,11 @@ UCLASS()
 class SOULSLIKEGAME_API UInitSPMagnitudeCalculation : public UGameplayModMagnitudeCalculation
 {
 	GENERATED_BODY()
-	
+
+	UInitSPMagnitudeCalculation();
+
+	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec)const override;
+
+	FGameplayEffectAttributeCaptureDefinition WillDef;
+	FGameplayEffectAttributeCaptureDefinition MaxStatDef;
 };
