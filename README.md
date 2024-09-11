@@ -15,3 +15,8 @@ Developed with Unreal Engine 5
 + #### DataTalbe에서 적용된 스탯을 기준으로 HP, SP를 적용함.
 + #### Mana는 스탯에 관련 없이 100으로 고정 되도록 함.
 + #### 작성한 SoulslikeAttributeSetBase에서 PostGameplayEffectExecute 함수에서 변동된 스탯을 Clamp하여 최대값을 넘지 못하도록 추가 구현 함.
+
+### 09-11 스탯 증가 기초 로직 구현
++ #### 스탯 증가용 GameplayEffect을 제작하고 SetByCaller를 통해 수정할 스탯의 증가량을 설정 할수 있도록 구현함.
++ #### BaseCharacter에 StatChangeEffects변수를 추가하여, TMap<FGameplayTag, TSubClassOf<UGameplayEffect>>형식으로 저장함.
++ #### 임시로 키보드L키를 누르면 StatChangeEffects에서 랜덤으로 Key값을 고르고, 해당 키값을 가진 Effect를 Tag와 함께 지정하여, GameplayEffect를 작동 시킴
