@@ -33,7 +33,6 @@ private:
 	//게임 시작 시 적용 할 수 있는 효과들(독 데미지, 회복 효과)
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS | Attribute", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<class UGameplayEffect>> DefaultEffect;
-	
 
 private:
 

@@ -64,6 +64,21 @@ public:
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, Mana)
 
+		// 실질적인 플레이어의 체력
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_MaxHP)
+	FGameplayAttributeData MaxHP;
+	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, MaxHP)
+
+		// 실질 적인 플레이어의 스태미나
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_MaxSP)
+	FGameplayAttributeData MaxSP;
+	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, MaxSP)
+
+		// 실질 적인 플레이어의 마나
+	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_MaxMana)
+	FGameplayAttributeData MaxMana;
+	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, MaxMana)
+
 
 public:
 	UFUNCTION()
@@ -92,6 +107,16 @@ public:
 
 	UFUNCTION()
 	virtual void OnRep_MaxStat(const FGameplayAttributeData& OldMaxStat);
+
+	UFUNCTION()
+	virtual void OnRep_MaxHP(const FGameplayAttributeData& OldMaxHP);
+
+	UFUNCTION()
+	virtual void OnRep_MaxSP(const FGameplayAttributeData& OlMaxdSP);
+
+	UFUNCTION()
+	virtual void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana);
+
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 

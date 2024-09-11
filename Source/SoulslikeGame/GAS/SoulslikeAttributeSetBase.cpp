@@ -50,6 +50,21 @@ void USoulslikeAttributeSetBase::OnRep_MaxStat(const FGameplayAttributeData& Old
 	GAMEPLAYATTRIBUTE_REPNOTIFY(USoulslikeAttributeSetBase, MaxStat, OldMaxStat);
 }
 
+void USoulslikeAttributeSetBase::OnRep_MaxHP(const FGameplayAttributeData& OldMaxHP)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(USoulslikeAttributeSetBase, MaxHP, OldMaxHP);
+}
+
+void USoulslikeAttributeSetBase::OnRep_MaxSP(const FGameplayAttributeData& OlMaxdSP)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(USoulslikeAttributeSetBase, MaxSP, OlMaxdSP);
+}
+
+void USoulslikeAttributeSetBase::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(USoulslikeAttributeSetBase, MaxMana, OldMaxMana);
+}
+
 void USoulslikeAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -60,9 +75,14 @@ void USoulslikeAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProp
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulslikeAttributeSetBase, Talent, COND_None, REPNOTIFY_Always); //재능
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulslikeAttributeSetBase, Concentration, COND_None, REPNOTIFY_Always); //집중
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulslikeAttributeSetBase, MaxStat, COND_None, REPNOTIFY_Always); //최대 스탯
+
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulslikeAttributeSetBase, HP, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulslikeAttributeSetBase, SP, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(USoulslikeAttributeSetBase, Mana, COND_None, REPNOTIFY_Always);
+
+	DOREPLIFETIME_CONDITION_NOTIFY(USoulslikeAttributeSetBase, MaxHP, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(USoulslikeAttributeSetBase, MaxSP, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(USoulslikeAttributeSetBase, MaxMana, COND_None, REPNOTIFY_Always);
 }
 
 
@@ -78,10 +98,12 @@ void USoulslikeAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffect
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxStat()));
+		SetMaxHP(100.0f + GetHealth() * 2);
 	}
 	else if (Data.EvaluatedData.Attribute == GetWillAttribute())
 	{
 		SetWill(FMath::Clamp(GetWill(), 0.0f, GetMaxStat()));
+		SetMaxSP(50.0f + GetWill() * 3);
 	}
 	else if (Data.EvaluatedData.Attribute == GetStrengthAttribute())
 	{
@@ -94,5 +116,21 @@ void USoulslikeAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffect
 	else if (Data.EvaluatedData.Attribute == GetConcentrationAttribute())
 	{
 		SetConcentration(FMath::Clamp(GetConcentration(), 0.0f, GetMaxStat()));
+	}
+	else if (Data.EvaluatedData.Attribute == GetHPAttribute())
+	{
+		SetHP(FMath::Clamp(GetHP(), 0.0f, GetMaxHP()));
+	}
+	else if (Data.EvaluatedData.Attribute == GetHPAttribute())
+	{
+		SetHP(FMath::Clamp(GetHP(), 0.0f, GetMaxHP()));
+	}
+	else if (Data.EvaluatedData.Attribute == GetSPAttribute())
+	{
+		SetSP(FMath::Clamp(GetSP(), 0.0f, GetMaxSP()));
+	}
+	else if (Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(), 0.0f, GetMaxMana()));
 	}
 }
