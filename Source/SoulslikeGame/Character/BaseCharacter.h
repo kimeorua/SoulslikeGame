@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "GameplayTagContainer.h"
 #include "BaseCharacter.generated.h"
 
 class USoluslikeAbilitySystemComponent;
@@ -30,9 +31,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS | Attribute", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<class UGameplayAbility>> DefaultAbility;
 
-	//게임 시작 시 적용 할 수 있는 효과들(독 데미지, 회복 효과)
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS | Attribute", meta = (AllowPrivateAccess = "true"))
-	TArray<TSubclassOf<class UGameplayEffect>> DefaultEffect;
+	//스탯 상승용 Gameplay Effect들 Tag로 정리
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GAS | Attribute", meta = (AllowPrivateAccess = "true"))
+	TMap<FGameplayTag, TSubclassOf<class UGameplayEffect>> StatChangeEffects;
 
 private:
 
