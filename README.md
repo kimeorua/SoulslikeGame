@@ -24,3 +24,8 @@ Developed with Unreal Engine 5
 ### 09-12 HP, SP, Mana UI구현 및 연동
 + #### PlayerHUD를 구현하여, BaseCharater의 Attribute값을 가져와서 연동 시킴
 + #### UBlueprintAsyncActionBase을 상속받아 Listen for Attribute Change를 통해, PlayerHUD에서 Attribute의 값이 변경될때마다 HUD를 갱신 함.
+
+### 09-16 StatUI구현
++ #### 플레이어의 현재 스탯 및 스탯을 변경 할 수 있는 UI창을 구현함.
++ #### 키보드 I키를 눌러 UI창을 팝업 시키거나 종료 시킬수 있도록 구현함.
++ #### 추가로 입력을 제한 하기 위해, GameplayTag를 부착하여 제어함. 
