@@ -38,3 +38,5 @@ Developed with Unreal Engine 5
 + #### 저장 할 때 OriginStat 과 NewStat에 같은 값을 우선 저장함.
 + #### 증가 버튼을 클릭 시 남아있는 투자 가능한 Point를 확인후, 최대 스탯값을 넘지 않았으면 NewStat값에 + 1 감소시에는 -1을 함.
 + #### 스탯을 투자 한 후 Apply버튼을 클릭하면 NewStat - Origin을 하예 해당 값을 받아 GameplayEffect를 작동 시킴.
++ #### 추가로 스탯 투자 후 플레이어의 HP, SP, Mana를 초기화 시켜, 가득 채우도록 구현 함.
++ #### 필요없어진 StatChangeEffects변수를제거함.
