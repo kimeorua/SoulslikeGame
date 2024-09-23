@@ -31,10 +31,6 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS | Attribute", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<class UGameplayAbility>> DefaultAbility;
 
-	//스탯 상승용 Gameplay Effect들 Tag로 정리
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GAS | Attribute", meta = (AllowPrivateAccess = "true"))
-	TMap<FGameplayTag, TSubclassOf<class UGameplayEffect>> StatChangeEffects;
-
 private:
 
 	/// <summary>
