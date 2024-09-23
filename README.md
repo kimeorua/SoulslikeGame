@@ -32,3 +32,9 @@ Developed with Unreal Engine 5
 
 ### 09-17 StatUI Player와 연동
 + #### UI창이 열릴 때 플레이어 캐릭터를 받아와서 플레이어의 Stat을 표시 하도록 구현함.
+
+### 09-23 UI에서 버튼을 이용하여 스탯 투자 및 적용 구현
++ #### 플레이어 캐릭터의 스탯을 받아온 후 구조체(F_UI_Stat)에 저장함.
++ #### 저장 할 때 OriginStat 과 NewStat에 같은 값을 우선 저장함.
++ #### 증가 버튼을 클릭 시 남아있는 투자 가능한 Point를 확인후, 최대 스탯값을 넘지 않았으면 NewStat값에 + 1 감소시에는 -1을 함.
++ #### 스탯을 투자 한 후 Apply버튼을 클릭하면 NewStat - Origin을 하예 해당 값을 받아 GameplayEffect를 작동 시킴.
