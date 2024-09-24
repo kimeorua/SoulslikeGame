@@ -42,3 +42,8 @@
 + #### 스탯을 투자 한 후 Apply버튼을 클릭하면 NewStat - Origin을 하예 해당 값을 받아 GameplayEffect를 작동 시킴.
 + #### 추가로 스탯 투자 후 플레이어의 HP, SP, Mana를 초기화 시켜, 가득 채우도록 구현 함.
 + #### 필요없어진 StatChangeEffects변수를제거함.
+
+### 09-24 Player Character Class 작성
++ #### BaseCharacter를 상속 받아 Player Character를 작성함.
++ #### Player Character에 입력을 통해 이동 및 점프, 마우스 카메라 회전을 구현 함.
++ #### 사용할 캐릭터 메쉬 에셋 탐색 및 임포트
