@@ -76,6 +76,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GiveAbilityMulity(TArray<TSubclassOf<class UGameplayAbility>> AddedAbilities);
 
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE USoluslikeAbilitySystemComponent* GetAbilitySystemComponent() const { return SoulslikeGASCompoent; };
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
