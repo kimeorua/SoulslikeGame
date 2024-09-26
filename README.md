@@ -51,3 +51,8 @@
 ### 09-25 사용할 애니메이션 리타겟팅 및 GAS Component 반환 함수 구현
 + #### 사용할 애니메이션 에셋을 탐색후, 사용할 캐릭터에 맞게 리타겟팅 함.
 + #### GAS Component를 반환하는 함수를 작성 함.
+
+### 09-26 애님인스턴스 작성
++ #### 공통적으로 사용할 SoulslikeAnimInstance class를 작성함.
++ #### 기본적으로 속도(Speed) 방향(Direction) 가속 여부(IsAccelerating)과, Character, 및 GASComponent와 MovementComponent를 변수로 가짐.
++ #### 속도를 계산하여, 속도에따라 걷기/달리기 애니메이션이 출력되도록 구현 함.
