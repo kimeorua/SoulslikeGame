@@ -56,3 +56,7 @@
 + #### 공통적으로 사용할 SoulslikeAnimInstance class를 작성함.
 + #### 기본적으로 속도(Speed) 방향(Direction) 가속 여부(IsAccelerating)과, Character, 및 GASComponent와 MovementComponent를 변수로 가짐.
 + #### 속도를 계산하여, 속도에따라 걷기/달리기 애니메이션이 출력되도록 구현 함.
+
+### 09-27 GitHub 연동 해제
++ #### Git LFS 용량 부족으로 Git Hub 연동을 해제함.
++ #### 후에 SVN이나 다른 방식으로 버전컨트롤 진행 예정
