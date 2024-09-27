@@ -41,6 +41,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Action", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
+	// 달리기 및 회피 액션
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Action", meta = (AllowPrivateAccess = "true"))
+	class UInputAction* DashAndAvoidAction;
+
 public:
 	/// <summary>
 	/// 입력 컨택스트 및 입력 설정
@@ -59,6 +63,27 @@ public:
 	/// </summary>
 	/// <param name="Value">입력 값</param>
 	void Look(const struct FInputActionValue& Value);
+
+	/// <summary>
+	/// 달리기 시작
+	/// </summary>
+	void DashStart();
+
+	/// <summary>
+	/// 달리기 종료
+	/// </summary>
+	void DashEnd();
+
+	/// <summary>
+	/// 회피 작동
+	/// </summary>
+	void Avoid();
+
+	/// <summary>
+	///  Tag 를 변수로 어빌리티 작동
+	/// </summary>
+	/// <param name="TagName">작동할 어빌리티의 Tag</param>
+	void AbilityActivateWithTag(FString Tag);
 
 protected:
 	/// <summary>

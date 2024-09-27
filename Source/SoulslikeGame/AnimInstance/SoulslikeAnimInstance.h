@@ -35,6 +35,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
 	bool IsAccelerating;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
+	bool IsAir;
+
 public:
 	USoulslikeAnimInstance(); // 생성자
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override; //애니메이션 업데이트 함수

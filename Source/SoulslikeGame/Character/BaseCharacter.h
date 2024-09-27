@@ -31,6 +31,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS | Attribute", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<class UGameplayAbility>> DefaultAbility;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement | Speed", meta = (AllowPrivateAccess = "true"))
+	float MaxSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement | Speed", meta = (AllowPrivateAccess = "true"))
+	float MinSpeed;
+
 private:
 
 	/// <summary>
@@ -78,6 +84,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE USoluslikeAbilitySystemComponent* GetAbilitySystemComponent() const { return SoulslikeGASCompoent; };
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetMaxSpeed() const { return MaxSpeed; };
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetMinSpeed() const { return MinSpeed; };
 
 protected:
 	// Called when the game starts or when spawned

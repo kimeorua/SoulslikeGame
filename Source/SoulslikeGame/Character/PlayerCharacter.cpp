@@ -10,11 +10,15 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "../GAS/SoluslikeAbilitySystemComponent.h"
 
 
 void APlayerCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//게임 시작시 이동속도 초기화
+	GetCharacterMovement()->MaxWalkSpeed = GetMinSpeed();
 }
 
 
@@ -54,6 +58,10 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Look);
+
+		EnhancedInputComponent->BindAction(DashAndAvoidAction, ETriggerEvent::Triggered, this, &APlayerCharacter::DashStart);
+		EnhancedInputComponent->BindAction(DashAndAvoidAction, ETriggerEvent::Completed, this, &APlayerCharacter::DashEnd);
+		EnhancedInputComponent->BindAction(DashAndAvoidAction, ETriggerEvent::Canceled, this, &APlayerCharacter::Avoid);
 	}
 	else
 	{
@@ -94,5 +102,30 @@ void APlayerCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void APlayerCharacter::DashStart()
+{
+	//최대속도 달리기 속도로 변경
+	GetCharacterMovement()->MaxWalkSpeed = GetMaxSpeed();
+}
+
+void APlayerCharacter::DashEnd()
+{
+	//최대 속도 걷기 속도로 변경
+	GetCharacterMovement()->MaxWalkSpeed = GetMinSpeed();
+}
+
+void APlayerCharacter::AbilityActivateWithTag(FString Tag)
+{
+	//매개변수 Tag를 받아서 TagContainer를 작성하고, 해당 Tag를 가진 Ability 작동
+	FGameplayTagContainer TagContainer;
+	TagContainer.AddTag(FGameplayTag::RequestGameplayTag(FName(Tag)));
+	GetAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer);
+}
+
+void APlayerCharacter::Avoid()
+{
+	AbilityActivateWithTag("Action.Avoid");
 }
 

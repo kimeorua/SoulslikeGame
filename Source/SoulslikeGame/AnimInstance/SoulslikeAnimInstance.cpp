@@ -15,8 +15,6 @@ USoulslikeAnimInstance::USoulslikeAnimInstance()
 
 void USoulslikeAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 {
-	
-
 	if (IsValid(Character))
 	{
 		SettingVlaue();
@@ -41,5 +39,6 @@ void USoulslikeAnimInstance::SettingVlaue()
 		FRotator Rot = FRotator(0.0f, Character->GetActorRotation().Yaw, 0);
 		Direction = UKismetAnimationLibrary::CalculateDirection(MovementComponent->Velocity, Rot);
 		IsAccelerating = UKismetMathLibrary::VSize(MovementComponent->GetCurrentAcceleration()) > 0 ? true : false;
+		IsAir = MovementComponent->IsFalling();
 	}
 }
