@@ -72,9 +72,9 @@
 
 ### 10-01 점프 딜레이 및 회피 개선, UI버그 수정, LockOnComponent 작성
 + #### 점프 착지 이후 바로 점프가 할수 없도록 Timer를 이용하여,
-  + '''cpp
+  + ```cpp
     void APlayerCharacter::JumpLockReSet()
 {
 	FTimerHandle JumpTimerHandle;
 	GetWorldTimerManager().SetTimer(JumpTimerHandle, FTimerDelegate::CreateLambda([this]() {JumpLock = false; }), JumpDelay, false);
-'''
+```
