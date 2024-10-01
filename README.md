@@ -81,3 +81,5 @@
     }
 ```
 + #### Player Character로 Default Pawn Class를 변경후, UI가 제대로 작동하지 않는 것을 확인, 디버깅 결과, 플레이어 캐릭터를 받아오는 Player 변수가 BP_Test_BaeCharater(Test용 캐릭터)로 되어있는것을 확인, 해당 변수형을 BaeCharater(c++ 클래스)로 변경 함.
++ #### LockOnComponent를 작성하여, C++로 SphereTraceMultiForObjects()를 작성하고, LockOn에 활용할 새로운 오브젝트 채널을 추가함, BaeCharater Class에는 CapsuleCollision을 추가함.
++ #### Trac결과 해당 콜리전이 충돌되는 것을 확인 함.
