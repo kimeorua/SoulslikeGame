@@ -71,11 +71,13 @@
 + #### 회피 애니메이션은 데이터 에셋을 생성하여, 해당 데이터 에셋에 배열로 추가하여 관리함.
 
 ### 10-01 점프 딜레이 및 회피 개선, UI버그 수정, LockOnComponent 작성
-+ #### 점프 착지 이후 바로 점프가 할수 없도록 Timer를 이용하여,
-  + ```cpp
+
++ #### 점프 착지 이후 바로 점프가 할수 없도록 JumpLock == true 일때만 점프를 할수 있도록 구현하고, Timer를 이용하여, JumpLock변수를 변경하여 딜레이를 구현 함.
+ ```cpp
     void APlayerCharacter::JumpLockReSet()
     {
 	FTimerHandle JumpTimerHandle;
-	GetWorldTimerManager().SetTimer(JumpTimerHandle, FTimerDelegate::CreateLambda([this]() {JumpLock = false; }), JumpDelay, false);\
+	GetWorldTimerManager().SetTimer(JumpTimerHandle, FTimerDelegate::CreateLambda([this]() {JumpLock = false; }), JumpDelay, false);
     }
 ```
++ #### Player Character로 Default Pawn Class를 변경후, UI가 제대로 작동하지 않는 것을 확인, 디버깅 결과, 플레이어 캐릭터를 받아오는 Player 변수가 BP_Test_BaeCharater(Test용 캐릭터)로 되어있는것을 확인, 해당 변수형을 BaeCharater(c++ 클래스)로 변경 함.
