@@ -10,6 +10,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "../GAS/SoluslikeAbilitySystemComponent.h"
 
 
@@ -50,8 +51,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 
 		// Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &APlayerCharacter::JumpStart);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &APlayerCharacter::JumpEnd);
 
 		// Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &APlayerCharacter::Move);
@@ -86,8 +87,12 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 		// add movement 
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
+		if (GetAbilitySystemComponent()->GetTagCount((FGameplayTag::RequestGameplayTag(FName("State.UseAvoid")))) == 0)
+		{
+			AddMovementInput(ForwardDirection, MovementVector.Y);
+			AddMovementInput(RightDirection, MovementVector.X);
+		}
+		
 	}
 }
 
@@ -122,6 +127,29 @@ void APlayerCharacter::AbilityActivateWithTag(FString Tag)
 	FGameplayTagContainer TagContainer;
 	TagContainer.AddTag(FGameplayTag::RequestGameplayTag(FName(Tag)));
 	GetAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer);
+}
+
+void APlayerCharacter::JumpStart()
+{
+	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("State.UseAvoid"))) <= 0)
+	{
+		if (!JumpLock)
+		{
+			JumpLock = true;
+			Jump();
+		}
+	}
+}
+
+void APlayerCharacter::JumpEnd()
+{
+	StopJumping();
+}
+
+void APlayerCharacter::JumpLockReSet()
+{
+	FTimerHandle JumpTimerHandle;
+	GetWorldTimerManager().SetTimer(JumpTimerHandle, FTimerDelegate::CreateLambda([this]() {JumpLock = false; }), JumpDelay, false);
 }
 
 void APlayerCharacter::Avoid()

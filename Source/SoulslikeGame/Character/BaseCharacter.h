@@ -31,11 +31,17 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS | Attribute", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<class UGameplayAbility>> DefaultAbility;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LockOnCollision", meta = (AllowPrivateAccess = "true"))
+	UCapsuleComponent* LockOnComponent;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement | Speed", meta = (AllowPrivateAccess = "true"))
 	float MaxSpeed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement | Speed", meta = (AllowPrivateAccess = "true"))
 	float MinSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement | LockOn", meta = (AllowPrivateAccess = "true"))
+	bool IsLockOn;
 
 private:
 

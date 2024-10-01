@@ -45,6 +45,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Action", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* DashAndAvoidAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Jump", meta = (AllowPrivateAccess = "true"))
+	float JumpDelay;
+
+	bool JumpLock;
+
 public:
 	/// <summary>
 	/// 입력 컨택스트 및 입력 설정
@@ -84,6 +89,22 @@ public:
 	/// </summary>
 	/// <param name="TagName">작동할 어빌리티의 Tag</param>
 	void AbilityActivateWithTag(FString Tag);
+
+	/// <summary>
+	///  점프 시작
+	/// </summary>
+	void JumpStart();
+
+	/// <summary>
+	/// 점프 종료
+	/// </summary>
+	void JumpEnd();
+
+	/// <summary>
+	/// 점프 타이머 작동
+	/// </summary>
+	UFUNCTION(BlueprintCallable)
+	void JumpLockReSet();
 
 protected:
 	/// <summary>

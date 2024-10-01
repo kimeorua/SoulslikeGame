@@ -4,6 +4,7 @@
 #include "BaseCharacter.h"
 #include "SoulslikeGame/GAS/SoluslikeAbilitySystemComponent.h"
 #include "SoulslikeGame/GAS/SoulslikeAttributeSetBase.h"
+#include "Components/CapsuleComponent.h"
 
 void ABaseCharacter::Initalize()
 {
@@ -42,6 +43,10 @@ ABaseCharacter::ABaseCharacter()
 	SoulslikeGASCompoent->SetIsReplicated(true);
 	//능력치 변경시 이벤트 호출
 	SoulslikeGASCompoent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+
+	LockOnComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("LockOnComponent"));
+	LockOnComponent->SetupAttachment(RootComponent);
+	LockOnComponent->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
 }
 
 void ABaseCharacter::OnRep_PlayerState()
