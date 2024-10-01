@@ -74,7 +74,8 @@
 + #### 점프 착지 이후 바로 점프가 할수 없도록 Timer를 이용하여,
   + ```cpp
     void APlayerCharacter::JumpLockReSet()
-{
+    {
 	FTimerHandle JumpTimerHandle;
-	GetWorldTimerManager().SetTimer(JumpTimerHandle, FTimerDelegate::CreateLambda([this]() {JumpLock = false; }), JumpDelay, false);
+	GetWorldTimerManager().SetTimer(JumpTimerHandle, FTimerDelegate::CreateLambda([this]() {JumpLock = false; }), JumpDelay, false);\
+    }
 ```
