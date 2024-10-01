@@ -69,3 +69,12 @@
 + #### 회피 애니메이션은 RootMotion을 끄고, Root강제 잠금을 활성화 하여, 제자리에서 구르도록 함.
 + #### 구르는 애니메이션이 나오는 동안 Apply Root Motion Constant Force() 함수를 통하여, 일정 거리만큼 이동 하도록 구현 함.
 + #### 회피 애니메이션은 데이터 에셋을 생성하여, 해당 데이터 에셋에 배열로 추가하여 관리함.
+
+### 10-01 점프 딜레이 및 회피 개선, UI버그 수정, LockOnComponent 작성
++ #### 점프 착지 이후 바로 점프가 할수 없도록 Timer를 이용하여,
+  + '''cpp
+    void APlayerCharacter::JumpLockReSet()
+{
+	FTimerHandle JumpTimerHandle;
+	GetWorldTimerManager().SetTimer(JumpTimerHandle, FTimerDelegate::CreateLambda([this]() {JumpLock = false; }), JumpDelay, false);
+'''
