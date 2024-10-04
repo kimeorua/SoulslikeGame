@@ -14,8 +14,7 @@ class SOULSLIKEGAME_API APlayerCharacter : public ABaseCharacter
 {
 	GENERATED_BODY()
 	
-public:
-	APlayerCharacter();
+private:
 
 	//카메라가 달릴 스프링 암
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -24,6 +23,10 @@ public:
 	// 카메라
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
+
+	//락온 컴포넌트
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LockOnComponent", meta = (AllowPrivateAccess = "true"))
+	class ULockOnComponent* LockOnComponent;
 
 	//입력 매핑 컨택스트
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | MappingContext",  meta = (AllowPrivateAccess = "true"))
@@ -45,12 +48,19 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Action", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* DashAndAvoidAction;
 
+	// 점프 딜레이
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Jump", meta = (AllowPrivateAccess = "true"))
 	float JumpDelay;
 
+	// 점프 잠금 여부
 	bool JumpLock;
 
 public:
+	/// <summary>
+	/// 생성자
+	/// </summary>
+	APlayerCharacter();
+
 	/// <summary>
 	/// 입력 컨택스트 및 입력 설정
 	/// </summary>
@@ -105,6 +115,19 @@ public:
 	/// </summary>
 	UFUNCTION(BlueprintCallable)
 	void JumpLockReSet();
+
+	/// <summary>
+	/// 카메라 컴포넌트 반환
+	/// </summary>
+	/// <returns>FollowCamera</returns>
+	FORCEINLINE UCameraComponent* GetCamera() const { return FollowCamera; }
+
+	/// <summary>
+	/// 락온 컴포넌트 반환
+	/// </summary>
+	/// <returns>LockOnComponent</returns>
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE ULockOnComponent* GetLockOnComponent() const { return LockOnComponent; }
 
 protected:
 	/// <summary>

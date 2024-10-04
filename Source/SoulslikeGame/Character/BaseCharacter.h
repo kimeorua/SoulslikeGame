@@ -20,6 +20,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS | Component", meta = (AllowPrivateAccess = "true"))
 	USoluslikeAbilitySystemComponent* SoulslikeGASCompoent;
 
+	// 어트리뷰트 값
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS | Attribute", meta = (AllowPrivateAccess = "true"))
 	const class USoulslikeAttributeSetBase* AttributeSetVar;
 
@@ -31,17 +32,21 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS | Attribute", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<class UGameplayAbility>> DefaultAbility;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LockOnCollision", meta = (AllowPrivateAccess = "true"))
-	UCapsuleComponent* LockOnComponent;
+	//무기 및 방패 제어용 컴포넌트
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS | Component", meta = (AllowPrivateAccess = "true"))
+	class UWeaponComponent* WeaponComponent;
 
+	// 락온 용 콜리전
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LockOnCollision", meta = (AllowPrivateAccess = "true"))
+	UCapsuleComponent* LockOnColliison;
+
+	// 최대 속도
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement | Speed", meta = (AllowPrivateAccess = "true"))
 	float MaxSpeed;
 
+	// 최소 속도
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement | Speed", meta = (AllowPrivateAccess = "true"))
 	float MinSpeed;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement | LockOn", meta = (AllowPrivateAccess = "true"))
-	bool IsLockOn;
 
 private:
 
@@ -88,12 +93,24 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GiveAbilityMulity(TArray<TSubclassOf<class UGameplayAbility>> AddedAbilities);
 
+	/// <summary>
+	/// 어빌리티 시스템 컴포넌트 반환
+	/// </summary>
+	/// <returns>어빌리티 시스템 컴포넌트</returns>
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE USoluslikeAbilitySystemComponent* GetAbilitySystemComponent() const { return SoulslikeGASCompoent; };
 
+	/// <summary>
+	/// 최대 속도 반환
+	/// </summary>
+	/// <returns>최대 속도</returns>
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE float GetMaxSpeed() const { return MaxSpeed; };
 
+	/// <summary>
+	/// 최소 속도 반환
+	/// </summary>
+	/// <returns>최소 속도</returns>
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE float GetMinSpeed() const { return MinSpeed; };
 

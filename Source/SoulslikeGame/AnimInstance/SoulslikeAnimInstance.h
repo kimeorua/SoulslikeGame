@@ -23,20 +23,29 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Components", meta = (AllowPrivateAccess = "true"))
 	class USoluslikeAbilitySystemComponent* GASComponent;
 
+	// 캐릭터
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Character", meta = (AllowPrivateAccess = "true"))
 	class ABaseCharacter* Character;;
 
+	// 속도
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
 	float Speed;
 
+	// 방향
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
 	float Direction;
 
+	// 가속 여부
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
 	bool IsAccelerating;
 
+	// 공중 여부
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
 	bool IsAir;
+
+	// 락온 여부
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
+	bool IsLockOn;
 
 public:
 	USoulslikeAnimInstance(); // 생성자

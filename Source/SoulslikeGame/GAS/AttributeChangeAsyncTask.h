@@ -13,7 +13,6 @@ UCLASS(BlueprintType, meta = (ExposedAsyncProxy = AsyncTask))
 class SOULSLIKEGAME_API UAttributeChangeAsyncTask : public UBlueprintAsyncActionBase
 {
 	GENERATED_BODY()
-	
 
 	UPROPERTY(BlueprintAssignable)
 	FOnAttributeChanged OnAttributgeChanged; //함수 포인터
