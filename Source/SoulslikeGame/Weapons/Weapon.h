@@ -13,9 +13,15 @@ UCLASS()
 class SOULSLIKEGAME_API AWeapon : public AProp
 {
 	GENERATED_BODY()
-	
-	AWeapon();
+
+private:
+	UPROPERTY(Category = Character, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class USkeletalMeshComponent* Mesh;
 
 public:
+	AWeapon();
+
 	virtual void BeginPlay() override;
+
+	virtual void Attach(FName Socket)override;
 };

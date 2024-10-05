@@ -10,17 +10,24 @@ UCLASS()
 class SOULSLIKEGAME_API AProp : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	AProp();
+
+private:
+	class ABaseCharacter* Owner;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
+
+	// Sets default values for this actor's properties
+	AProp();
+
+	void OwnerSet(ABaseCharacter* Target) { Owner = Target; }
+	ABaseCharacter* GetOwner()const { return Owner; }
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void Attach(FName Socket);
 };

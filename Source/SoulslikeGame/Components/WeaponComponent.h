@@ -18,23 +18,30 @@ private:
 	TMap < EWeaponType, class UWeaponDataAsset* > Weapons;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons | Test", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<class AWeapon> TestWeaponClass;
+	class AWeapon* CurrentWeapon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons", meta = (AllowPrivateAccess = "true"))
+	class UShieldDataAsset* ShieldData;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons | Test", meta = (AllowPrivateAccess = "true"))
-	class AWeapon* CurrentWeapon;
+	class AShield* CurrentAShield;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons", meta = (AllowPrivateAccess = "true"))
 	class ABaseCharacter* Owner;
 
-public:	
-	// Sets default values for this component's properties
-	UWeaponComponent();
 
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:	
+	// Sets default values for this component's properties
+	UWeaponComponent();
+
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	void WeaponsSetting();
+
+	void ShieldSetting();
 };
