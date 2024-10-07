@@ -7,6 +7,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "../GAS/SoluslikeAbilitySystemComponent.h"
 
 // Sets default values for this component's properties
 ULockOnComponent::ULockOnComponent()
@@ -36,7 +37,7 @@ ABaseCharacter* ULockOnComponent::TraceForTarget()
 	// 반환할 락온 대상
 	ABaseCharacter* HitActor;
 
-	bool Succes = UKismetSystemLibrary::SphereTraceSingleForObjects(GetWorld(), Location, Location,  LockOnRadius, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true);
+	bool Succes = UKismetSystemLibrary::SphereTraceSingleForObjects(GetWorld(), Location, Location,  LockOnRadius, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
 
 	if (Succes)
 	{
@@ -61,6 +62,11 @@ void ULockOnComponent::BeginPlay()
 	}
 }
 
+void ULockOnComponent::InitializeComponent()
+{
+	Super::InitializeComponent();
+}
+
 bool ULockOnComponent::CheackTarget(ABaseCharacter* Target)
 {
 	//트레이스 타입
@@ -73,7 +79,7 @@ bool ULockOnComponent::CheackTarget(ABaseCharacter* Target)
 	
 	// 충돌 결과
 	FHitResult HitResult;
-	bool Trace = UKismetSystemLibrary::LineTraceSingle(GetWorld(), Owner->GetCamera()->GetComponentLocation(), Target->GetActorLocation(), TraceType, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true);
+	bool Trace = UKismetSystemLibrary::LineTraceSingle(GetWorld(), Owner->GetCamera()->GetComponentLocation(), Target->GetActorLocation(), TraceType, false, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
 	if (!Trace)
 	{
 		return true;
@@ -122,6 +128,11 @@ void ULockOnComponent::TargetLockOn()
 		Owner->GetCharacterMovement()->bOrientRotationToMovement = false;
 		Owner->bUseControllerRotationYaw = true;
 		IsLockOn = true;
+
+		if (Owner->GetAbilitySystemComponent()->GetTagCount((FGameplayTag::RequestGameplayTag(FName("State.UseLockOn")))) <= 0)
+		{
+			Owner->GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.UseLockOn")));
+		}
 	}
 }
 
@@ -133,6 +144,11 @@ void ULockOnComponent::StopTargetLockOn()
 	Owner->GetCharacterMovement()->bOrientRotationToMovement = true;
 	Owner->bUseControllerRotationYaw = false;
 	IsLockOn = false;
+
+	if (Owner->GetAbilitySystemComponent()->GetTagCount((FGameplayTag::RequestGameplayTag(FName("State.UseLockOn")))) > 0)
+	{
+		Owner->GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.UseLockOn")));
+	}
 }
 
 FRotator ULockOnComponent::GetLockOnCameraRotation()

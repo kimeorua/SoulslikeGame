@@ -5,6 +5,8 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "KismetAnimationLibrary.h"
+#include "../Components/LockOnComponent.h"
+#include "../GAS/SoluslikeAbilitySystemComponent.h"
 
 USoulslikeAnimInstance::USoulslikeAnimInstance()
 {
@@ -40,5 +42,10 @@ void USoulslikeAnimInstance::SettingVlaue()
 		Direction = UKismetAnimationLibrary::CalculateDirection(MovementComponent->Velocity, Rot);
 		IsAccelerating = UKismetMathLibrary::VSize(MovementComponent->GetCurrentAcceleration()) > 0 ? true : false;
 		IsAir = MovementComponent->IsFalling();
+
+		if (GASComponent)
+		{
+			IsLockOn = GASComponent->GetTagCount(FGameplayTag::RequestGameplayTag(FName("State.UseLockOn"))) > 0 ? true : false;
+		}
 	}
 }

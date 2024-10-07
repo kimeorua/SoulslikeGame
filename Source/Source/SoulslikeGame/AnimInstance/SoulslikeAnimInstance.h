@@ -43,6 +43,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
 	bool IsAir;
 
+	// 락온 여부
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
+	bool IsLockOn;
+
 public:
 	USoulslikeAnimInstance(); // 생성자
 	virtual void NativeUpdateAnimation(float DeltaSeconds) override; //애니메이션 업데이트 함수

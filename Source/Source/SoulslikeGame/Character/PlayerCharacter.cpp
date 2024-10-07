@@ -12,6 +12,7 @@
 #include "InputActionValue.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "../Components/LockOnComponent.h"
+#include "../Components/WeaponComponent.h"
 #include "../GAS/SoluslikeAbilitySystemComponent.h"
 
 
@@ -66,6 +67,9 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(DashAndAvoidAction, ETriggerEvent::Triggered, this, &APlayerCharacter::DashStart);
 		EnhancedInputComponent->BindAction(DashAndAvoidAction, ETriggerEvent::Completed, this, &APlayerCharacter::DashEnd);
 		EnhancedInputComponent->BindAction(DashAndAvoidAction, ETriggerEvent::Canceled, this, &APlayerCharacter::Avoid);
+
+		EnhancedInputComponent->BindAction(FristWeaponSelectAction, ETriggerEvent::Started, this, &APlayerCharacter::SelectFristWeapon);
+		EnhancedInputComponent->BindAction(SecondWeaponSelectAction, ETriggerEvent::Started, this, &APlayerCharacter::SelectSecondWeapon);
 	}
 	else
 	{
@@ -158,5 +162,28 @@ void APlayerCharacter::JumpLockReSet()
 void APlayerCharacter::Avoid()
 {
 	AbilityActivateWithTag("Action.Avoid");
+}
+
+void APlayerCharacter::SelectFristWeapon()
+{
+	if (GetWeaponComponent() != nullptr) 
+	{
+		GetWeaponComponent()->WeaponSelect(EWeaponType::Sword);
+		Equip();
+	}
+}
+
+void APlayerCharacter::SelectSecondWeapon()
+{
+	if (GetWeaponComponent() != nullptr)
+	{
+		GetWeaponComponent()->WeaponSelect(EWeaponType::Axe);
+		Equip();
+	}
+}
+
+void APlayerCharacter::Equip()
+{
+	AbilityActivateWithTag("Action.Equip");
 }
 

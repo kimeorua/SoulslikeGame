@@ -17,7 +17,7 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LockOn", meta = (AllowPrivateAccess = "true"))
 	float LockOnRadius;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LockOn", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LockOn", meta = (AllowPrivateAccess = "true"))
 	bool IsLockOn;
 
 	// 바라볼 캐릭터
@@ -78,5 +78,5 @@ public:
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-		
+	virtual void InitializeComponent() override;
 };

@@ -5,6 +5,8 @@
 #include "SoulslikeGame/GAS/SoluslikeAbilitySystemComponent.h"
 #include "SoulslikeGame/GAS/SoulslikeAttributeSetBase.h"
 #include "Components/CapsuleComponent.h"
+#include "../Components/WeaponComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 void ABaseCharacter::Initalize()
 {
@@ -47,6 +49,11 @@ ABaseCharacter::ABaseCharacter()
 	LockOnColliison = CreateDefaultSubobject<UCapsuleComponent>(TEXT("LockOnCollision"));
 	LockOnColliison->SetupAttachment(RootComponent);
 	LockOnColliison->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
+
+	WeaponComponent1 = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent1"));
+
+	bUseControllerRotationYaw = false;
+	GetCharacterMovement()->bOrientRotationToMovement = true;
 }
 
 void ABaseCharacter::OnRep_PlayerState()

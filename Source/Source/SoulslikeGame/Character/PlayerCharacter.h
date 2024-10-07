@@ -25,7 +25,7 @@ private:
 	class UCameraComponent* FollowCamera;
 
 	//락온 컴포넌트
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LockOnComponent", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "LockOnComponent", meta = (AllowPrivateAccess = "true"))
 	class ULockOnComponent* LockOnComponent;
 
 	//입력 매핑 컨택스트
@@ -47,6 +47,14 @@ private:
 	// 달리기 및 회피 액션
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Action", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* DashAndAvoidAction;
+
+	// 1번 무기 선택 액션
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Action", meta = (AllowPrivateAccess = "true"))
+	class UInputAction* FristWeaponSelectAction;
+
+	// 2번 무기 선택 액션
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Action", meta = (AllowPrivateAccess = "true"))
+	class UInputAction* SecondWeaponSelectAction;
 
 	// 점프 딜레이
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Jump", meta = (AllowPrivateAccess = "true"))
@@ -128,6 +136,21 @@ public:
 	/// <returns>LockOnComponent</returns>
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE ULockOnComponent* GetLockOnComponent() const { return LockOnComponent; }
+
+	/// <summary>
+	/// 첫번째 무기 선택 시
+	/// </summary>
+	void SelectFristWeapon();
+
+	/// <summary>
+	/// 두번째 무기 선택 시
+	/// </summary>
+	void SelectSecondWeapon();
+
+	/// <summary>
+	/// 무기 장착 Ability 작동
+	/// </summary>
+	void Equip();
 
 protected:
 	/// <summary>

@@ -32,6 +32,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "GAS | Attribute", meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<class UGameplayAbility>> DefaultAbility;
 
+	//무기 및 방패 제어용 컴포넌트
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "GAS | Component", meta = (AllowPrivateAccess = "true"))
+	class UWeaponComponent* WeaponComponent1;
+
 	// 락온 용 콜리전
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LockOnCollision", meta = (AllowPrivateAccess = "true"))
 	UCapsuleComponent* LockOnColliison;
@@ -95,6 +99,9 @@ public:
 	/// <returns>어빌리티 시스템 컴포넌트</returns>
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE USoluslikeAbilitySystemComponent* GetAbilitySystemComponent() const { return SoulslikeGASCompoent; };
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE UWeaponComponent* GetWeaponComponent() const { return WeaponComponent1; };
 
 	/// <summary>
 	/// 최대 속도 반환
