@@ -105,3 +105,11 @@
 ### 10-05 무기 및 방패에 메쉬 적용 및 장착 구현
 + #### 무기 및 방패에 각각 스켈레탈 메쉬와 스태틱 메쉬를 적용함.
 + #### 게임 시작 시, 무기들과 방패를 스폰 하고, DataAsset에 지정된 소켓에 부착되도록 구현 함.
+
+### 10-07 무기 장착 및 중단 로직 구현
++ #### 무기를 장착 할 시 CurrentWeapon과 CurrentWeaponDataAsset을 설정하는 함수를 WeaponComponnet에 작성함.
++ #### 플레이어 캐릭터는 입력을 받을경우, 해당 입력에 맞는 WeaponType을 매개변수로 전달하여, 제어함.
++ #### 이때 현재 장착한 무기가 없으면 바로 적용 되지만, 이미 장착한 무기가 있으면, 해당무기를 OldWeapon DataAsset을 OldWeaponDataAsset에 저장함.
++ #### OldWeapon 및 DataAsset은 무기 변경 중 중단 되었을 경우(피격 받음, 회피 함)이전 상태로 Current Weapon과 DataAsset을 변경 해줌.
++ #### WeaponDataAsset Class에 무기의 장착 및 장착 해제 AnimMontage를 가지는 구조체를 변수로 추가하고, 각 DatAsset에서 Montage를 생성및 적용 함.
++ #### 후에 무기가 실제로 장착되도록 부착 및 탈착을 구현 예정
