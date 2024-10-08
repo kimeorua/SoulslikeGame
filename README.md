@@ -113,3 +113,8 @@
 + #### OldWeapon 및 DataAsset은 무기 변경 중 중단 되었을 경우(피격 받음, 회피 함)이전 상태로 Current Weapon과 DataAsset을 변경 해줌.
 + #### WeaponDataAsset Class에 무기의 장착 및 장착 해제 AnimMontage를 가지는 구조체를 변수로 추가하고, 각 DatAsset에서 Montage를 생성및 적용 함.
 + #### 후에 무기가 실제로 장착되도록 부착 및 탈착을 구현 예정
+
+### 10-08 무기 장착 및 장착 해제 애니메이션 추가
++ #### 무기가 장착 및 장착해제되는 애님 몽타주를 재생시키는 Ability를 작성함
++ #### 해당 Ability에서 PlayMontageAndWait을 통해 중단시 원래 무기로 CurrentDataAsset및 CurrentWeapon을 복구하는 기능을 부여함.
++ #### 후에 애님 몽타주에 Notify를실행하여 알맞는 위치에 부착하는 기능을 추가 예정
