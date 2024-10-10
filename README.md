@@ -130,5 +130,60 @@
 + #### 무기가 실제로 장착이되는 EqiopWeapon함수를 통해, 장착 여부와 현재 무기가 있는지 등 여러 상황을 고려하여, 적절하게 부착 되도록 구현 함.
 
 ```cpp
+void UWeaponComponent::WeaponSelect(EWeaponType Type)
+{
+	if (IsValid(Weapons.FindRef(Type)))
+	{
+		if (CurrentWeapon.Weapon == nullptr || CurrentWeapon.DataAsset == nullptr)
+		{
+			RequestWeapon.DataAsset = WeaponDatas.FindRef(Type); //현재 장착중인 무기가 없으면 바로 적용
+			RequestWeapon.Weapon = Weapons.FindRef(Type);
+		}
+		else
+		{
+			if (CurrentWeapon.DataAsset->GetWeaponType() == Type)
+			{
+				RequestWeapon.DataAsset = nullptr; //이미 장착된 무기가 있고, 요청된 무기의 Type 동일 -> 같은버튼은 한번더 누름 -> 무기 장착 해제
+				RequestWeapon.Weapon = nullptr;
+			}
+			else
+			{
+				OldWeapon.DataAsset = CurrentWeapon.DataAsset; // 좀더 자연스럽게 변경하기 위해 이전 무기 저장
+				OldWeapon.Weapon = CurrentWeapon.Weapon;
 
+				RequestWeapon.DataAsset = WeaponDatas.FindRef(Type); // 이미 장착된 무기가 있고 Type이 다름 -> 다른 무기로 교체
+				RequestWeapon.Weapon = Weapons.FindRef(Type);
+			}
+		}
+	}
+}
+
+void UWeaponComponent::EquipWeapon(bool IsEquip)
+{
+	if (IsEquip)
+	{
+		if (CurrentWeapon.DataAsset == nullptr && CurrentWeapon.Weapon == nullptr)
+		{
+			CurrentWeapon.DataAsset = RequestWeapon.DataAsset; // 현재무기에 요청 무기 저장
+			CurrentWeapon.Weapon = RequestWeapon.Weapon;
+
+			CurrentWeapon.Weapon->Attach(CurrentWeapon.DataAsset->GetEquipSokcet()); // 해당 위치에 부착
+		}
+		else
+		{
+			CurrentWeapon.Weapon->Attach(CurrentWeapon.DataAsset->GetUnequipSokcet()); //이미 장착된 무기를 부착 해제
+
+			CurrentWeapon.DataAsset = RequestWeapon.DataAsset; // 현재무기에 요청 무기 저장
+			CurrentWeapon.Weapon = RequestWeapon.Weapon;
+
+			CurrentWeapon.Weapon->Attach(CurrentWeapon.DataAsset->GetEquipSokcet()); //무기 부착
+		}
+	}
+	else
+	{
+		CurrentWeapon.Weapon->Attach(CurrentWeapon.DataAsset->GetUnequipSokcet()); // 무기 장착 해제
+		CurrentWeapon.DataAsset = RequestWeapon.DataAsset; //현재무기에 요청 무기 저장
+		CurrentWeapon.Weapon = RequestWeapon.Weapon;
+	}
+}
 ```
