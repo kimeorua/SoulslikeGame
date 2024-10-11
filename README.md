@@ -187,3 +187,40 @@ void UWeaponComponent::EquipWeapon(bool IsEquip)
 	}
 }
 ```
+
+### 10-10 무기 장착 오류 해결, 방패 작동 구현
++ #### 다른 무기를 장착 할 시 무기 해제가 무기 장착 애니메이션 시작과 동시에 작동 되도록 WeaponComponent Class에 UnequipWeapon 함수를 작성함.
+ 
+```cpp
+
+void UWeaponComponent::UnequipWeapon()
+{
+	if (CurrentWeapon.DataAsset != nullptr && CurrentWeapon.Weapon != nullptr)
+	{
+		CurrentWeapon.Weapon->Attach(CurrentWeapon.DataAsset->GetUnequipSokcet());
+
+		CurrentWeapon.Weapon = nullptr;
+		CurrentWeapon.DataAsset = nullptr;
+	}
+}
+
+```
+
++ #### 방패를 들어올리는 GA_Shield 어빌리티를 작성하고 플레이어 캐릭터가 마우스 우클릭을 누르면 작동 하도록 구현 함
++ #### 추가로 방패를 들어 올릴때 방패가 펴지는 효과를 주기위해 방패 Mesh의 Sclae크기를 변경하여 구현 함
+
+```cpp
+
+void AShield::ShieldSizeChange(bool isActivate)
+{
+	if (isActivate)
+	{
+		Mesh->SetWorldScale3D(ActivateSize);
+	}
+	else
+	{
+		Mesh->SetWorldScale3D(DeactivateSize);
+	}
+}
+
+```
