@@ -56,6 +56,10 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Action", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* SecondWeaponSelectAction;
 
+	// 공격 액션
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Action", meta = (AllowPrivateAccess = "true"))
+	class UInputAction* AttackAction;
+
 	// 점프 딜레이
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Jump", meta = (AllowPrivateAccess = "true"))
 	float JumpDelay;
@@ -103,12 +107,6 @@ public:
 	void Avoid();
 
 	/// <summary>
-	///  Tag 를 변수로 어빌리티 작동
-	/// </summary>
-	/// <param name="TagName">작동할 어빌리티의 Tag</param>
-	void AbilityActivateWithTag(FString Tag);
-
-	/// <summary>
 	///  점프 시작
 	/// </summary>
 	void JumpStart();
@@ -147,9 +145,10 @@ public:
 	/// </summary>
 	void SelectSecondWeapon();
 
+	/// <summary>
+	/// 무기 장착 및 해제
+	/// </summary>
 	virtual void Equip() override;
-
-	virtual void Unequip(bool PlayAnim) override;
 
 protected:
 	/// <summary>

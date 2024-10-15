@@ -8,6 +8,7 @@
 #include "../Weapons/Weapon.h"
 #include "../Weapons/Shield.h"
 #include "../Character/BaseCharacter.h"
+#include "../Character/PlayerCharacter.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -16,7 +17,7 @@ UWeaponComponent::UWeaponComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	CurrentAShield = nullptr;
+	CurrentShield = nullptr;
 	ShieldData = nullptr;
 }
 
@@ -60,9 +61,9 @@ void UWeaponComponent::ShieldSetting()
 {
 	if (IsValid(ShieldData))
 	{
-		CurrentAShield = GetWorld()->SpawnActor<AShield>(ShieldData->GetShieldClass());
-		CurrentAShield->OwnerSet(Cast<ABaseCharacter>(GetOwner()));
-		CurrentAShield->Attach(ShieldData->GetEquipSokcet());
+		CurrentShield = GetWorld()->SpawnActor<AShield>(ShieldData->GetShieldClass());
+		CurrentShield->OwnerSet(Cast<ABaseCharacter>(GetOwner()));
+		CurrentShield->Attach(ShieldData->GetEquipSokcet());
 	}
 }
 
@@ -107,8 +108,6 @@ void UWeaponComponent::EquipWeapon(bool IsEquip)
 		}
 		else
 		{
-			CurrentWeapon.Weapon->Attach(CurrentWeapon.DataAsset->GetUnequipSokcet());
-
 			CurrentWeapon.DataAsset = RequestWeapon.DataAsset;
 			CurrentWeapon.Weapon = RequestWeapon.Weapon;
 
@@ -120,5 +119,25 @@ void UWeaponComponent::EquipWeapon(bool IsEquip)
 		CurrentWeapon.Weapon->Attach(CurrentWeapon.DataAsset->GetUnequipSokcet());
 		CurrentWeapon.DataAsset = RequestWeapon.DataAsset;
 		CurrentWeapon.Weapon = RequestWeapon.Weapon;
+	}
+}
+
+void UWeaponComponent::UnequipWeapon()
+{
+	if (CurrentWeapon.DataAsset != nullptr && CurrentWeapon.Weapon != nullptr)
+	{
+		CurrentWeapon.Weapon->Attach(CurrentWeapon.DataAsset->GetUnequipSokcet());
+
+		CurrentWeapon.Weapon = nullptr;
+		CurrentWeapon.DataAsset = nullptr;
+	}
+}
+
+void UWeaponComponent::WeaponAttackStart()
+{
+	if (ABaseCharacter*Owner = Cast<ABaseCharacter>(GetOwner()))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("WeaponComponent::Attack"));
+		Owner->AbilityActivateWithTag("Action.Attack");
 	}
 }

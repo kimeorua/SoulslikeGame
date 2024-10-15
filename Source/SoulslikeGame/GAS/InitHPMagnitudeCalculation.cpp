@@ -35,5 +35,5 @@ float UInitHPMagnitudeCalculation::CalculateBaseMagnitude_Implementation(const F
 
 	Health = FMath::Clamp(Health, 0.0f, MaxStat);
 
-	return 100.0f + Health * 2;
+	return Base + (Health * Rate);
 }

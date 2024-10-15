@@ -24,7 +24,7 @@ private:
 
 	// 현재 방패
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons | Actor", meta = (AllowPrivateAccess = "true"))
-	class AShield* CurrentAShield;
+	class AShield* CurrentShield;
 
 	// 무기 BP 맵
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons | Actor", meta = (AllowPrivateAccess = "true"))
@@ -64,13 +64,36 @@ public:
 	/// <summary>
 	/// 요청한 무기DataAsset및 BP 반환
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>RequestWeapon</returns>
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE FWeaponInfo GetRequestWeaponInfo() const {return RequestWeapon;}
 
+	/// <summary>
+	/// 현재 무기 정보 반환
+	/// </summary>
+	/// <returns>CurrentWeapon</returns>
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE FWeaponInfo GetCurrentWeaponInfo() const { return CurrentWeapon; }
 
+	/// <summary>
+	/// 현재 방패 액터 반환
+	/// </summary>
+	/// <returns>CurrentShield</returns>
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE AShield* GetCurrentShield() const { return CurrentShield; }
+
+	/// <summary>
+	/// 무기 장착
+	/// </summary>
+	/// <param name="IsEquip">true 면 작동 false면 장착 해제</param>
 	UFUNCTION(BlueprintCallable)
 	void EquipWeapon(bool IsEquip);
+
+	/// <summary>
+	/// 무기 장착 해제 -> 이미 무기가 있을경우 작동 함
+	/// </summary>
+	UFUNCTION(BlueprintCallable)
+	void UnequipWeapon();
+
+	void WeaponAttackStart();
 };

@@ -35,5 +35,5 @@ float UInitSPMagnitudeCalculation::CalculateBaseMagnitude_Implementation(const F
 
 	Will = FMath::Clamp(Will, 0.0f, MaxStat);
 
-	return 50.0f + Will * 3;
+	return Base + (Will * Rate);
 }

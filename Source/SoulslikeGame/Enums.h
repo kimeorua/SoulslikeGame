@@ -44,3 +44,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equips")
 	class AWeapon* Weapon;
 };
+
+USTRUCT(BlueprintType)
+struct FAttackMontages
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equips")
+	TArray <class UAnimMontage*> AttackMontages;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equips")
+	float PlayRate = 1.0f;
+};

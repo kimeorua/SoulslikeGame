@@ -127,6 +127,14 @@ public:
 	/// </summary>
 	virtual void Unequip(bool PlayAnim);
 
+	/// <summary>
+	///  Tag 를 변수로 어빌리티 작동
+	/// </summary>
+	/// <param name="TagName">작동할 어빌리티의 Tag</param>
+	void AbilityActivateWithTag(FString Tag);
+
+	void Attack();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -36,6 +36,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Equip", meta = (AllowPrivateAccess = "true"))
 	FEquipMontages EquipMontages;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
+	FAttackMontages AttackMontages;
+
 public:
 	FORCEINLINE TSubclassOf<class AWeapon> GetWeaponClass() const{ return WeaponClass; }
 
@@ -49,4 +52,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE FEquipMontages GetEquipMontages() const { return EquipMontages; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE FAttackMontages GetAttackMontages() const { return AttackMontages; }
 };

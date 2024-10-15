@@ -20,4 +20,14 @@ class SOULSLIKEGAME_API UInitHPMagnitudeCalculation : public UGameplayModMagnitu
 
 	FGameplayEffectAttributeCaptureDefinition HealthDef;
 	FGameplayEffectAttributeCaptureDefinition MaxStatDef;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
+	float Rate = 2.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
+	float Base = 100.0f;
+
+	/** Attributes to capture that are relevant to the calculation */
+	//UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Attributes)
+	const TArray<FGameplayEffectAttributeCaptureDefinition> RelevantAttributesToCapturePtr;
 };

@@ -72,6 +72,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 		EnhancedInputComponent->BindAction(FristWeaponSelectAction, ETriggerEvent::Started, this, &APlayerCharacter::SelectFristWeapon);
 		EnhancedInputComponent->BindAction(SecondWeaponSelectAction, ETriggerEvent::Started, this, &APlayerCharacter::SelectSecondWeapon);
+
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ABaseCharacter::Attack);
 	}
 	else
 	{
@@ -130,14 +132,6 @@ void APlayerCharacter::DashEnd()
 	GetCharacterMovement()->MaxWalkSpeed = GetMinSpeed();
 }
 
-void APlayerCharacter::AbilityActivateWithTag(FString Tag)
-{
-	//매개변수 Tag를 받아서 TagContainer를 작성하고, 해당 Tag를 가진 Ability 작동
-	FGameplayTagContainer TagContainer;
-	TagContainer.AddTag(FGameplayTag::RequestGameplayTag(FName(Tag)));
-	GetAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer);
-}
-
 void APlayerCharacter::JumpStart()
 {
 	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("State.UseAvoid"))) <= 0)
@@ -189,17 +183,5 @@ void APlayerCharacter::SelectSecondWeapon()
 void APlayerCharacter::Equip()
 {
 	AbilityActivateWithTag("Action.Equip");
-}
-
-void APlayerCharacter::Unequip(bool PlayAnim)
-{
-	if (PlayAnim)
-	{
-		AbilityActivateWithTag("Action.Unequip");
-	}
-	else if (!PlayAnim)
-	{
-		return;
-	}
 }
 
