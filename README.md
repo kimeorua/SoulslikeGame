@@ -34,11 +34,48 @@
 
 ```cpp
 
-코드 작성
+#include "InitHPMagnitudeCalculation.h"
+#include "SoulslikeAttributeSetBase.h"
+
+UInitHPMagnitudeCalculation::UInitHPMagnitudeCalculation()
+{
+	HealthDef.AttributeToCapture = USoulslikeAttributeSetBase::GetHealthAttribute();
+	HealthDef.AttributeSource = EGameplayEffectAttributeCaptureSource::Target;
+	HealthDef.bSnapshot = false;
+
+	MaxStatDef.AttributeToCapture = USoulslikeAttributeSetBase::GetMaxStatAttribute();
+	MaxStatDef.AttributeSource = EGameplayEffectAttributeCaptureSource::Target;
+	MaxStatDef.bSnapshot = false;
+
+	RelevantAttributesToCapture.Add(HealthDef);
+	RelevantAttributesToCapture.Add(MaxStatDef);
+}
+
+float UInitHPMagnitudeCalculation::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+{
+	const FGameplayTagContainer* Source = Spec.CapturedSourceTags.GetAggregatedTags();
+	const FGameplayTagContainer* Target = Spec.CapturedTargetTags.GetAggregatedTags();
+
+	FAggregatorEvaluateParameters EvaluateParameters;
+	EvaluateParameters.SourceTags = Source;
+	EvaluateParameters.TargetTags = Target;
+
+	float Health = 0.0f;
+	GetCapturedAttributeMagnitude(HealthDef, Spec, EvaluateParameters, Health);
+
+	float MaxStat = 0.0f;
+	GetCapturedAttributeMagnitude(MaxStatDef, Spec, EvaluateParameters, MaxStat);
+
+	Health = FMath::Clamp(Health, 0.0f, MaxStat);
+
+	return Base + (Health * Rate);
+}
 
 ```
 
 ### 코드 설명
-+ ### 설명
-
-### 
++ #### HP가 Health스탯의 여향을 받도록 AttributeSet에서 Health 스탯과, 최대 스탯인 MaxStat을 받아와서 각각 HealthDef, MaxStatDef에 저장함.
++ #### CalculateBaseMagnitude_Implementation() 함수에서 계산에서 사용할 Health 와 MaxStat을 초기화 하고, 각각 GetCapturedAttributeMagnitude를 통해 현재 Attribute의 값을 가져와 저장 해 줌
++ #### 계산된 Health가 최소0, 최대MaxStat을 가지도록 FMath::Clamp()를 통해 범위를 지정 함.
++ #### 이후 블루프린트에서 지정한 Base 값과, Rate 값을 통해 계산하여 반환 함.
++ #### SP계산식도 위와 동일하게 작동 하도록 추가 구현 함.
