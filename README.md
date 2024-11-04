@@ -81,3 +81,170 @@ float UInitHPMagnitudeCalculation::CalculateBaseMagnitude_Implementation(const F
 + #### 계산된 Health가 최소0, 최대MaxStat을 가지도록 FMath::Clamp()를 통해 범위를 지정 함.
 + #### 이후 블루프린트에서 지정한 Base 값과, Rate 값을 통해 계산하여 반환 함.
 + #### SP계산식도 위와 동일하게 작동 하도록 추가 구현 함.
+
+### GameplayEffectExecutionCalculation을 활용하여 스탯에 따른 데미지 계산식 구현
+
+```cpp
+
+// 캡처할 정보를 구조체로 선언함.
+
+struct DamageCature
+{
+	DECLARE_ATTRIBUTE_CAPTUREDEF(HP);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(SP);
+
+	DECLARE_ATTRIBUTE_CAPTUREDEF(Strength);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(Concentration);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(MaxStat);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(Mana);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(MaxMana);
+
+	DamageCature()
+	{
+		// 공격을 받은 캐릭터의 스탯 정보
+		DEFINE_ATTRIBUTE_CAPTUREDEF(USoulslikeAttributeSetBase, HP, Target, false); 
+		DEFINE_ATTRIBUTE_CAPTUREDEF(USoulslikeAttributeSetBase, SP, Target, false);
+
+		공격을 한 캐릭터의 스탯 정보
+		DEFINE_ATTRIBUTE_CAPTUREDEF(USoulslikeAttributeSetBase, Strength, Source, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(USoulslikeAttributeSetBase, Concentration, Source, false);
+
+		DEFINE_ATTRIBUTE_CAPTUREDEF(USoulslikeAttributeSetBase, MaxStat, Source, false);
+
+		DEFINE_ATTRIBUTE_CAPTUREDEF(USoulslikeAttributeSetBase, Mana, Source, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(USoulslikeAttributeSetBase, MaxMana, Source, false);
+	}
+};
+
+static DamageCature& GetDamageCature()
+{
+	static DamageCature DamageCature;
+	return DamageCature;
+}
+
+```
+
+```cpp
+
+UExec_Cal_ApplyDamamge::UExec_Cal_ApplyDamamge()
+{
+	RelevantAttributesToCapture.Add(GetDamageCature().HPDef);
+	RelevantAttributesToCapture.Add(GetDamageCature().SPDef);
+
+	RelevantAttributesToCapture.Add(GetDamageCature().StrengthDef);
+	RelevantAttributesToCapture.Add(GetDamageCature().ConcentrationDef);
+	RelevantAttributesToCapture.Add(GetDamageCature().MaxStatDef);
+
+	RelevantAttributesToCapture.Add(GetDamageCature().ManaDef);
+	RelevantAttributesToCapture.Add(GetDamageCature().MaxManaDef);
+}
+
+void UExec_Cal_ApplyDamamge::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParms, FGameplayEffectCustomExecutionOutput& OutExecutionOutPut) const
+{
+	UAbilitySystemComponent* TargetAbilitySystemComponent = ExecutionParms.GetTargetAbilitySystemComponent();
+	AActor* TargetActor = TargetAbilitySystemComponent ? TargetAbilitySystemComponent->GetAvatarActor() : nullptr;
+
+	UAbilitySystemComponent* SourceAbilitySystemComponent = ExecutionParms.GetSourceAbilitySystemComponent();
+	AActor* SourceActor = SourceAbilitySystemComponent ? SourceAbilitySystemComponent->GetAvatarActor() : nullptr;
+
+	const FGameplayEffectSpec& Spec = ExecutionParms.GetOwningSpec();
+	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
+	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
+
+	FAggregatorEvaluateParameters EvaluateParameters;
+	EvaluateParameters.SourceTags = SourceTags;
+	EvaluateParameters.TargetTags = TargetTags;
+
+	// 공격 받은 캐릭터의 HP
+	float HP = 0.0f; 
+	ExecutionParms.AttemptCalculateCapturedAttributeMagnitude(GetDamageCature().HPDef, EvaluateParameters, HP);
+
+	// 공격 받은 캐릭터 SP
+	float SP = 0.0f;
+	ExecutionParms.AttemptCalculateCapturedAttributeMagnitude(GetDamageCature().SPDef, EvaluateParameters, SP);
+
+	// 공격한 객체의 Strength 스탯
+	float Strength = 0.0f;
+	ExecutionParms.AttemptCalculateCapturedAttributeMagnitude(GetDamageCature().StrengthDef, EvaluateParameters, Strength);
+
+	// 공격한 객체의 Concentration 스탯
+	float Concentration = 0.0f;
+	ExecutionParms.AttemptCalculateCapturedAttributeMagnitude(GetDamageCature().ConcentrationDef, EvaluateParameters, Concentration);
+
+	// 공격한 객체의 MaxStat 수치
+	float MaxStat = 0.0f;
+	ExecutionParms.AttemptCalculateCapturedAttributeMagnitude(GetDamageCature().MaxStatDef, EvaluateParameters, MaxStat);
+
+	// 공격한 객체의 Mana 스탯
+	float Mana = 0.0f;
+	ExecutionParms.AttemptCalculateCapturedAttributeMagnitude(GetDamageCature().ManaDef, EvaluateParameters, Mana);
+
+	// 공격한 객체의 MaxMana 스탯
+	float MaxMana = 0.0f;
+	ExecutionParms.AttemptCalculateCapturedAttributeMagnitude(GetDamageCature().MaxManaDef, EvaluateParameters, MaxMana);
+
+	// 치명타 확률 = 기본 치명타 확률 + Concentration(집중)
+	float CriticalPersent = BaseCriticalChance + FMath::Clamp(Concentration, 0.0f, MaxStat);
+
+	// 치명타 피해 배율 = 기본 치명타 피해 배률 + (Concentration(집중) * 0.02f)
+	float CriticalRate = BaseCriticalRate + FMath::Clamp(Concentration, 0.0f, MaxStat) * 0.02f;
+
+	// 무기의 기본 데미지 가져 오기
+	float WeaponBaseDamage = Cast<ABaseCharacter>(SourceActor)->GetWeaponBaseDamage();
+
+	// 계산된 총 데미지 정의
+	float Damage = 0.0f;
+
+	// Strength(힘)의 스탯에 따른 배율 조정
+	// Strength(힘) 스탯이 StrengthCap을 넘어가면 효율이 감소함.
+	// 데미지 = 무기 기본 데미지 + (Strength(힘) * 데미지 배율)
+	if (Strength >= StrengthCap)
+	{
+		// Strength(힘) 이 StrengthCap 이상이면 배율이 감소함. 
+		Damage = WeaponBaseDamage + (((StrengthCap - 1) * DamageRateMax) + (FMath::Clamp(Strength, 0.0f, MaxStat) - (StrengthCap - 1)) * DamageRateMin);
+	}
+	else
+	{
+		Damage = WeaponBaseDamage + FMath::Clamp(Strength, 0.0f, MaxStat) * DamageRateMax;
+	}
+
+	// 치명타 계산용 랜덤
+	float Random = FMath::RandRange(0, 100);
+
+	// 감소될 HP
+	float TargetHPDawn;
+
+	// 마나 획득 -> 플레이어 전용임으로 BP에서 플레이어 전용과 보스 전용으로 나눠 적용 시킬 것.
+	float SourceManaUp = ManaGain;
+
+	// 치명타가 발생 하면 데미지 *= 치명타 피해 배율
+	if (Random <= CriticalPersent)
+	{
+		TargetHPDawn = FMath::CeilToInt(Damage * CriticalRate);
+	}
+	else
+	{
+		TargetHPDawn = FMath::CeilToInt(Damage);
+	}
+
+
+	//각 스탯 적용
+	if (Mana + SourceManaUp >= MaxMana)
+	{
+		SourceAbilitySystemComponent->ApplyModToAttribute(USoulslikeAttributeSetBase::GetManaAttribute(), EGameplayModOp::Override, MaxMana);
+	}
+	else
+	{
+		SourceAbilitySystemComponent->ApplyModToAttribute(USoulslikeAttributeSetBase::GetManaAttribute(), EGameplayModOp::Additive, SourceManaUp);
+	}
+
+	OutExecutionOutPut.AddOutputModifier(FGameplayModifierEvaluatedData(GetDamageCature().HPProperty, EGameplayModOp::Additive, -TargetHPDawn));
+	OutExecutionOutPut.AddOutputModifier(FGameplayModifierEvaluatedData(GetDamageCature().SPProperty, EGameplayModOp::Additive, -TargetHPDawn * SPDawnRate));
+}
+
+```
+
+### 코드 설명
++ #### 데미지 GameplayEffect가 작동되면, 해당 수식을 통해 계산 함
++ #### 공격 한 객체의 각 스탯을 가져와 치명타 여부와, 총 데미지를 계산함.
++ #### 공격 받은 객체의 HP를 감소 시키고 보스 캐릭터는 추가로 SP를 받은 데미지에 비례하여 감소 시킴.
