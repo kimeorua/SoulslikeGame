@@ -36,9 +36,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Component", meta = (AllowPrivateAccess = "true"))
 	class UWeaponComponent* WeaponComponent;
 
-	// 락온 용 콜리전
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "LockOnCollision", meta = (AllowPrivateAccess = "true"))
-	UCapsuleComponent* LockOnColliison;
+	// 전투 용 콜리전
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combet Collision", meta = (AllowPrivateAccess = "true"))
+	UCapsuleComponent* CombetColliison;
 
 	// 최대 속도
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement | Speed", meta = (AllowPrivateAccess = "true"))
@@ -47,6 +47,13 @@ private:
 	// 최소 속도
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Movement | Speed", meta = (AllowPrivateAccess = "true"))
 	float MinSpeed;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hit Montage", meta = (AllowPrivateAccess = "true"))
+	TArray<UAnimMontage*>HitMontage;
+
+	int HitIndex;
+
+	FVector HitPoint;
 
 private:
 
@@ -133,7 +140,32 @@ public:
 	/// <param name="TagName">작동할 어빌리티의 Tag</param>
 	void AbilityActivateWithTag(FString Tag);
 
-	void Attack();
+	/// <summary>
+	/// 태그가 0보다 작으면 true 아니면 false 반환
+	/// </summary>
+	/// <param name="Tag"></param>
+	/// <returns></returns>
+	bool TagCountCheak(FName Tag);
+
+	/// <summary>
+	/// 공격 작동
+	/// </summary>
+	virtual void Attack();
+
+	float GetWeaponBaseDamage() const;
+
+	/// <summary>
+	/// 피격 모션 인덱스 계산
+	/// </summary>
+	virtual void HitMontageIndexCalculate(FVector ImpactPoint);
+
+	virtual void HitVectorCalculate(FVector ImpactPoint);
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE int GetHitMontageIndex() const { return HitIndex; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE FVector GetHitPoint() const { return HitPoint; }
 
 protected:
 	// Called when the game starts or when spawned

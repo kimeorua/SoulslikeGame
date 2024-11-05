@@ -51,8 +51,13 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
 	bool IsLockOn;
 
+	// 무기 타입
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
 	EWeaponType WeaponType;
+
+	// 점프 공격 여부
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
+	bool IsAirAttck;
 
 public:
 	USoulslikeAnimInstance(); // 생성자

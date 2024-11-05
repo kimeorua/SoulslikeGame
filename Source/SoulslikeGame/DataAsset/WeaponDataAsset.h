@@ -39,6 +39,12 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
 	FAttackMontages AttackMontages;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack | Collision", meta = (AllowPrivateAccess = "true"))
+	FCollisionData CollisionData;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack | Damage", meta = (AllowPrivateAccess = "true"))
+	float BaseDamage;
+
 public:
 	FORCEINLINE TSubclassOf<class AWeapon> GetWeaponClass() const{ return WeaponClass; }
 
@@ -55,4 +61,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE FAttackMontages GetAttackMontages() const { return AttackMontages; }
+
+	FORCEINLINE FCollisionData GetCollisionData() const { return CollisionData; }
+
+	FORCEINLINE float GetBaseDamage() const { return BaseDamage; }
 };

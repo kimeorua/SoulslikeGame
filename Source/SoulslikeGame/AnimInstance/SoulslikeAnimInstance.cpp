@@ -51,6 +51,7 @@ void USoulslikeAnimInstance::SettingVlaue()
 		if (GASComponent)
 		{
 			IsLockOn = GASComponent->GetTagCount(FGameplayTag::RequestGameplayTag(FName("State.UseLockOn"))) > 0 ? true : false;
+			IsAirAttck = GASComponent->GetTagCount(FGameplayTag::RequestGameplayTag(FName("Action.Attack.Jump"))) > 0 ? true : false;
 		}
 		if (IsValid(WeaponComponent))
 		{

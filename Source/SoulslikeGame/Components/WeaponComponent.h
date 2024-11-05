@@ -23,7 +23,7 @@ private:
 	class UShieldDataAsset* ShieldData;
 
 	// 현재 방패
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Weapons | Actor", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapons | Actor", meta = (AllowPrivateAccess = "true"))
 	class AShield* CurrentShield;
 
 	// 무기 BP 맵
@@ -59,6 +59,7 @@ public:
 	/// <summary>
 	/// 무기 선택시 호출
 	/// </summary>
+	UFUNCTION(BlueprintCallable)
 	void WeaponSelect(EWeaponType Type);
 
 	/// <summary>
@@ -95,5 +96,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UnequipWeapon();
 
+	UFUNCTION(BlueprintCallable)
+	void WeaponColliison();
+
 	void WeaponAttackStart();
+
+	float GetBaseDamage() const ;
+
+	void SendEvent(class ABaseCharacter* Target, FString Tag);
+
+	bool AttackGuardCheck(FVector Loc);
 };

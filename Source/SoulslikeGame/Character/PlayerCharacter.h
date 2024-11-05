@@ -67,6 +67,9 @@ private:
 	// 점프 잠금 여부
 	bool JumpLock;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Boss", meta = (AllowPrivateAccess = "true"))
+	class AEnemyCharacter* CombetBoss = nullptr;
+
 public:
 	/// <summary>
 	/// 생성자
@@ -123,6 +126,11 @@ public:
 	void JumpLockReSet();
 
 	/// <summary>
+	/// 점프 가능 여부 판단 -> GameplayTag를 통해 제어
+	/// </summary>
+	bool IsJumpAble();
+
+	/// <summary>
 	/// 카메라 컴포넌트 반환
 	/// </summary>
 	/// <returns>FollowCamera</returns>
@@ -149,6 +157,16 @@ public:
 	/// 무기 장착 및 해제
 	/// </summary>
 	virtual void Equip() override;
+
+	/// <summary>
+	/// 플레이어 공격 입력 시 작동
+	/// </summary>
+	virtual void Attack() override;
+
+	void SetBoss(class AEnemyCharacter* Boss);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetBossUI(class AEnemyCharacter* Boss);
 
 protected:
 	/// <summary>

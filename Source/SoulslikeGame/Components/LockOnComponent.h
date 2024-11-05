@@ -21,7 +21,7 @@ private:
 	bool IsLockOn;
 
 	// 바라볼 캐릭터
-	class ABaseCharacter* LockOnActor;
+	class AEnemyCharacter* LockOnActor;
 
 	//컴포넌트 소유 한 플레이어 캐릭터
 	class APlayerCharacter* Owner;
@@ -37,13 +37,13 @@ public:
 	/// 락온할 객체 탐색
 	/// </summary>
 	/// <returns></returns>
-	ABaseCharacter* TraceForTarget();
+	AEnemyCharacter* TraceForTarget();
 
 	/// <summary>
 	///  장애물 판단
 	/// </summary>
 	/// <returns></returns>
-	bool CheackTarget(ABaseCharacter* Target);
+	bool CheackTarget(AEnemyCharacter* Target);
 
 	/// <summary>
 	/// 락온 작동

@@ -19,27 +19,27 @@ class SOULSLIKEGAME_API USoulslikeAttributeSetBase : public UAttributeSet
 	GENERATED_BODY()
 	
 public:
-	//체력(생명력) 1p HP 2 증가, 기본값 100
+	//체력 스탯(생명력) 1p HP 2 증가, 기본값 100
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_Health)
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, Health)
 
-	//의지(스태미나) 1p 3증가, 기본값 50
+	//의지 스탯 (스태미나) 1p 3증가, 기본값 50
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_Will)
 	FGameplayAttributeData Will;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, Will)
 
-	//근력(공격력) 1p 5증가 30스텟 이상부터 1p 3증가 기본값30 
+	//근력 스탯 (공격력) 1p 5증가 30스텟 이상부터 1p 3증가
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_Strength)
 	FGameplayAttributeData Strength;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, Strength)
 
-	//재능(스킬 데미지/회복량) 1p 당 7 증가 / 1p당 1증가 
+	//재능 스탯(스킬 데미지/회복량) 1p 당 7 증가 / 1p당 1증가 
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_Talent)
 	FGameplayAttributeData Talent;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, Talent)
 
-	//집중(치명타 확률 / 치명타 데미지 증가) 1p당 1%증가 / 1p 2%p 증가 기본값 10% / 150%
+	//집중 스탯(치명타 확률 / 치명타 데미지 증가) 확률 1p당 1%증가 / 데미지 1p 2%p 증가 || 기본값 10% / 150%
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_Concentration)
 	FGameplayAttributeData Concentration;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, Concentration)
@@ -49,36 +49,35 @@ public:
 	FGameplayAttributeData MaxStat;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, MaxStat)
 
-	// 실질적인 플레이어의 체력
+	// 캐릭터의 체력
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_HP)
 	FGameplayAttributeData HP;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, HP)
 
-	// 실질 적인 플레이어의 스태미나
+	// 캐릭터의 스태미나
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_SP)
 	FGameplayAttributeData SP;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, SP)
 
-	// 실질 적인 플레이어의 마나
+	// 캐릭터의 마나
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_Mana)
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, Mana)
 
-		// 실질적인 플레이어의 체력
+	// 최대 체력
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_MaxHP)
 	FGameplayAttributeData MaxHP;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, MaxHP)
 
-		// 실질 적인 플레이어의 스태미나
+	//  최대 스태미나
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_MaxSP)
 	FGameplayAttributeData MaxSP;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, MaxSP)
 
-		// 실질 적인 플레이어의 마나
+	//  최대 마나
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_MaxMana)
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, MaxMana)
-
 
 public:
 	UFUNCTION()

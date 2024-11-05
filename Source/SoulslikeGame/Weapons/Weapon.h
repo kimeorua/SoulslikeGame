@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Prop.h"
+#include "../Enums.h"
 #include "Weapon.generated.h"
 
 /**
@@ -24,4 +25,6 @@ public:
 	virtual void BeginPlay() override;
 
 	virtual void Attach(FName Socket)override;
+
+	virtual TTuple<bool, ABaseCharacter*, FVector, FVector> TraceOn(FCollisionData CollisionData);
 };

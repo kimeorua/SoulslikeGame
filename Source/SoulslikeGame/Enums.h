@@ -14,6 +14,16 @@ enum class EWeaponType : uint8
 	Max UMETA(DisplayName = "Max")
 };
 
+UENUM(BlueprintType)
+enum class ETraceType : uint8
+{
+	None = 0 UMETA(DisplayName = "None"),
+	Sphere UMETA(DisplayName = "Sphere"), // 캡슐
+	Box UMETA(DisplayName = "Box"), // 박스
+
+	Max UMETA(DisplayName = "Max")
+};
+
 USTRUCT(BlueprintType)
 struct FEquipMontages
 {
@@ -57,4 +67,24 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Equips")
 	float PlayRate = 1.0f;
+};
+
+USTRUCT(BlueprintType)
+struct FCollisionData
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Collision")
+	ETraceType TraceType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Collision")
+	float Size;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Collision")
+	FName CollisionStartSocketName;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Collision")
+	FName CollisionEndSocketName;
 };

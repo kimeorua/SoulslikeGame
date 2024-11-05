@@ -39,5 +39,7 @@ public:
 	/// <param name="isActivate">작동 여부</param>
 	UFUNCTION(BlueprintCallable)
 	void ShieldSizeChange(bool isActivate);
+
+	bool GuardCheack();
 	
 };

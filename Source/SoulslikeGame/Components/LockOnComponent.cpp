@@ -3,6 +3,7 @@
 
 #include "LockOnComponent.h"
 #include "../Character/PlayerCharacter.h"
+#include "../Character/EnemyCharacter.h"
 #include "Camera/CameraComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -19,7 +20,7 @@ ULockOnComponent::ULockOnComponent()
 	IsLockOn = false;
 }
 
-ABaseCharacter* ULockOnComponent::TraceForTarget()
+AEnemyCharacter* ULockOnComponent::TraceForTarget()
 {
 	FVector Location = Owner->GetActorLocation();
 
@@ -35,13 +36,14 @@ ABaseCharacter* ULockOnComponent::TraceForTarget()
 	ActorsToIgnore.Add(Cast<AActor>(Owner));
 	
 	// 반환할 락온 대상
-	ABaseCharacter* HitActor;
+	AEnemyCharacter* HitActor;
 
 	bool Succes = UKismetSystemLibrary::SphereTraceSingleForObjects(GetWorld(), Location, Location,  LockOnRadius, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
 
 	if (Succes)
 	{
-		HitActor = Cast<ABaseCharacter>(HitResult.GetActor());
+		HitActor = Cast<AEnemyCharacter>(HitResult.GetActor());
+		HitActor->LockOnUI_On_Off(true);
 		return HitActor;
 	}
 	else
@@ -67,7 +69,7 @@ void ULockOnComponent::InitializeComponent()
 	Super::InitializeComponent();
 }
 
-bool ULockOnComponent::CheackTarget(ABaseCharacter* Target)
+bool ULockOnComponent::CheackTarget(AEnemyCharacter* Target)
 {
 	//트레이스 타입
 	TEnumAsByte<ETraceTypeQuery>TraceType;
@@ -98,7 +100,7 @@ void ULockOnComponent::TriggerTargetLockOn()
 	}
 	else if (!IsLockOn)
 	{
-		if (IsValid((TraceForTarget())))
+		if (TraceForTarget() != nullptr)
 		{
 			if (CheackTarget(TraceForTarget()))
 			{
@@ -139,6 +141,7 @@ void ULockOnComponent::TargetLockOn()
 void ULockOnComponent::StopTargetLockOn()
 {
 	GetWorld()->GetTimerManager().ClearTimer(LockOnHandle);
+	LockOnActor->LockOnUI_On_Off(false);
 	LockOnActor = nullptr;
 
 	Owner->GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -158,4 +161,3 @@ FRotator ULockOnComponent::GetLockOnCameraRotation()
 
 	return UKismetMathLibrary::FindLookAtRotation(Owner->GetCamera()->GetComponentLocation(), Vec);
 }
-

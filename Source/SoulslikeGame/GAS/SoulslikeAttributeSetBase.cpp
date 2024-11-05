@@ -65,6 +65,7 @@ void USoulslikeAttributeSetBase::OnRep_MaxMana(const FGameplayAttributeData& Old
 	GAMEPLAYATTRIBUTE_REPNOTIFY(USoulslikeAttributeSetBase, MaxMana, OldMaxMana);
 }
 
+
 void USoulslikeAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -93,7 +94,7 @@ void USoulslikeAttributeSetBase::PreAttributeChange(const FGameplayAttribute& At
 
 void USoulslikeAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("PostGameplayEffectExecute: %s"), *Data.EvaluatedData.Attribute.AttributeName);
+	UE_LOG(LogTemp, Warning, TEXT("%s: PostGameplayEffectExecute: %s"), *GetOwningActor()->GetName(), *Data.EvaluatedData.Attribute.AttributeName);
 
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{

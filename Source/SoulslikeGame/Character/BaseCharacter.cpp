@@ -3,6 +3,8 @@
 
 #include "BaseCharacter.h"
 #include "SoulslikeGame/GAS/SoluslikeAbilitySystemComponent.h"
+#include "KismetAnimationLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "SoulslikeGame/GAS/SoulslikeAttributeSetBase.h"
 #include "Components/CapsuleComponent.h"
 #include "../Components/WeaponComponent.h"
@@ -46,11 +48,12 @@ ABaseCharacter::ABaseCharacter()
 	//능력치 변경시 이벤트 호출
 	SoulslikeGASCompoent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
-	LockOnColliison = CreateDefaultSubobject<UCapsuleComponent>(TEXT("LockOnCollision"));
-	LockOnColliison->SetupAttachment(RootComponent);
-	LockOnColliison->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel1);
-
 	WeaponComponent = CreateDefaultSubobject<UWeaponComponent>(TEXT("WeaponComponent"));
+
+	CombetColliison = CreateDefaultSubobject<UCapsuleComponent>(TEXT("CombetCollision"));
+	CombetColliison->SetupAttachment(RootComponent);
+	CombetColliison->SetCollisionObjectType(ECollisionChannel::ECC_GameTraceChannel2);
+	CombetColliison->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	bUseControllerRotationYaw = false;
 	GetCharacterMovement()->bOrientRotationToMovement = true;
@@ -96,6 +99,33 @@ void ABaseCharacter::Unequip(bool PlayAnim)
 {
 }
 
+void ABaseCharacter::HitMontageIndexCalculate(FVector ImpactPoint)
+{
+	FVector Velocity = ImpactPoint - GetActorLocation();
+	float Yaw = GetActorRotation().Yaw;
+	FRotator Rot;
+	Rot.Yaw = Yaw;
+	float Diretion = UKismetAnimationLibrary::CalculateDirection(Velocity, Rot);
+
+	if (HitMontage.Num() > 1)
+	{
+		int MontageAngle = 360 / HitMontage.Num();
+
+		float Base = (UKismetMathLibrary::FTrunc(Diretion + 360)) % 360;
+
+		HitIndex = UKismetMathLibrary::FTrunc(Base / MontageAngle);
+	}
+	else
+	{
+		HitIndex = 0;
+	}
+}
+
+void ABaseCharacter::HitVectorCalculate(FVector ImpactPoint)
+{
+	HitPoint = ImpactPoint;
+}
+
 // Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
 {
@@ -138,8 +168,24 @@ void ABaseCharacter::AbilityActivateWithTag(FString Tag)
 	GetAbilitySystemComponent()->TryActivateAbilitiesByTag(TagContainer);
 }
 
+bool ABaseCharacter::TagCountCheak(FName Tag)
+{
+	return GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(Tag)) <= 0;
+}
+
 void ABaseCharacter::Attack()
 {
-	UE_LOG(LogTemp, Warning, TEXT("BaseCharacter::Attack"));
 	GetWeaponComponent()->WeaponAttackStart();
+}
+
+float ABaseCharacter::GetWeaponBaseDamage() const
+{
+	if (IsValid(GetWeaponComponent()))
+	{
+		return GetWeaponComponent()->GetBaseDamage();
+	}
+	else
+	{
+		return 0.0f;
+	}
 }

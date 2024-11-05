@@ -35,3 +35,8 @@ void AShield::ShieldSizeChange(bool isActivate)
 		Mesh->SetWorldScale3D(DeactivateSize);
 	}
 }
+
+bool AShield::GuardCheack()
+{
+	return false;
+}

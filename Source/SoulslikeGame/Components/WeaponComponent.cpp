@@ -9,6 +9,8 @@
 #include "../Weapons/Shield.h"
 #include "../Character/BaseCharacter.h"
 #include "../Character/PlayerCharacter.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "KismetAnimationLibrary.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -38,8 +40,6 @@ void UWeaponComponent::InitializeComponent()
 void UWeaponComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 void UWeaponComponent::WeaponsSetting()
@@ -133,11 +133,94 @@ void UWeaponComponent::UnequipWeapon()
 	}
 }
 
+
 void UWeaponComponent::WeaponAttackStart()
 {
 	if (ABaseCharacter*Owner = Cast<ABaseCharacter>(GetOwner()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("WeaponComponent::Attack"));
 		Owner->AbilityActivateWithTag("Action.Attack");
 	}
 }
+
+float UWeaponComponent::GetBaseDamage() const
+{
+	return IsValid(CurrentWeapon.DataAsset) ? CurrentWeapon.DataAsset->GetBaseDamage() : 0.0f;
+}
+
+void UWeaponComponent::WeaponColliison()
+{
+	if (IsValid(CurrentWeapon.Weapon) && IsValid(CurrentWeapon.DataAsset))
+	{
+		TTuple<bool, ABaseCharacter*, FVector, FVector> TraceData = CurrentWeapon.Weapon->TraceOn(CurrentWeapon.DataAsset->GetCollisionData());
+
+		bool Succes = TraceData.Get<0>();
+		ABaseCharacter* HitActor = TraceData.Get<1>();
+		FVector Location = TraceData.Get<2>();
+		FVector ImpactPoint = TraceData.Get<3>();
+
+		if (Succes && IsValid(HitActor))
+		{
+			if (!(HitActor->TagCountCheak("Action.Shield")))
+			{
+				if (HitActor->GetWeaponComponent()->AttackGuardCheck(Location))
+				{
+					SendEvent(HitActor, "Event.AttackGuard");
+				}
+				else
+				{
+					HitActor->HitMontageIndexCalculate(ImpactPoint);
+					HitActor->HitVectorCalculate(ImpactPoint);
+
+					if (IsValid(HitActor->GetWeaponComponent()->CurrentShield))
+					{
+						HitActor->GetWeaponComponent()->CurrentShield->ShieldSizeChange(false);
+					}
+					SendEvent(HitActor, "Event.AttackHit");
+				}
+			}
+			else
+			{
+				HitActor->HitMontageIndexCalculate(ImpactPoint);
+				HitActor->HitVectorCalculate(ImpactPoint);
+				SendEvent(HitActor, "Event.AttackHit");
+			}
+		}
+	}
+}
+
+bool UWeaponComponent::AttackGuardCheck(FVector Loc)
+{
+	if (IsValid(CurrentShield))
+	{
+		FVector Location = Loc - GetOwner()->GetActorLocation();
+		
+		float Drection = UKismetAnimationLibrary::CalculateDirection(Location, GetOwner()->GetActorRotation());
+
+		if (FMath::Abs(Drection) <= 50.0f)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void UWeaponComponent::SendEvent(ABaseCharacter* Target, FString Tag)
+{
+	FGameplayTag EventTag;
+
+	EventTag = FGameplayTag::RequestGameplayTag(FName(Tag));
+
+	FGameplayEventData EventData;
+	EventData.Instigator = GetOwner();
+	EventData.Target = Target;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetOwner(), EventTag, EventData);
+}
+
+

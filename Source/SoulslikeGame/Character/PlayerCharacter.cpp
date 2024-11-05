@@ -73,11 +73,7 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(FristWeaponSelectAction, ETriggerEvent::Started, this, &APlayerCharacter::SelectFristWeapon);
 		EnhancedInputComponent->BindAction(SecondWeaponSelectAction, ETriggerEvent::Started, this, &APlayerCharacter::SelectSecondWeapon);
 
-		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ABaseCharacter::Attack);
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("'%s' Failed to find an Enhanced Input component! This template is built to use the Enhanced Input system. If you intend to use the legacy system, then you will need to update this C++ file."), *GetNameSafe(this));
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &APlayerCharacter::Attack);
 	}
 }
 
@@ -98,12 +94,11 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 		// add movement 
-		if (GetAbilitySystemComponent()->GetTagCount((FGameplayTag::RequestGameplayTag(FName("State.UseAvoid")))) == 0)
+		if (TagCountCheak("Action.Avoid") && TagCountCheak("Action.Attack.Jump"))
 		{
 			AddMovementInput(ForwardDirection, MovementVector.Y);
 			AddMovementInput(RightDirection, MovementVector.X);
 		}
-		
 	}
 }
 
@@ -134,7 +129,7 @@ void APlayerCharacter::DashEnd()
 
 void APlayerCharacter::JumpStart()
 {
-	if (GetAbilitySystemComponent()->GetTagCount(FGameplayTag::RequestGameplayTag(FName("State.UseAvoid"))) <= 0)
+	if (IsJumpAble())
 	{
 		if (!JumpLock)
 		{
@@ -153,6 +148,11 @@ void APlayerCharacter::JumpLockReSet()
 {
 	FTimerHandle JumpTimerHandle;
 	GetWorldTimerManager().SetTimer(JumpTimerHandle, FTimerDelegate::CreateLambda([this]() {JumpLock = false; }), JumpDelay, false);
+}
+
+bool APlayerCharacter::IsJumpAble()
+{
+	return (TagCountCheak("Action.Avoid") && TagCountCheak("Action.Attack") && TagCountCheak("Action.Shield"));
 }
 
 void APlayerCharacter::Avoid()
@@ -184,4 +184,19 @@ void APlayerCharacter::Equip()
 {
 	AbilityActivateWithTag("Action.Equip");
 }
+
+void APlayerCharacter::Attack()
+{
+	Super::Attack();
+}
+
+void APlayerCharacter::SetBoss(AEnemyCharacter* Boss)
+{
+	if (Boss != nullptr)
+	{
+		CombetBoss = Boss;
+		SetBossUI(CombetBoss);
+	}
+}
+
 
