@@ -30,6 +30,8 @@ public:
 
 	void LockOnUI_On_Off(bool OnOff);
 
+	virtual void GuardBreak() override;
+
 protected:
 	/// <summary>
 	/// 게임 시작 시 호출

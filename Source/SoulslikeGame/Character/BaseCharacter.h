@@ -51,6 +51,18 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Hit Montage", meta = (AllowPrivateAccess = "true"))
 	TArray<UAnimMontage*>HitMontage;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Guard And Parry Montage", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* GuardBreakMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Guard And Parry Montage", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* GuardMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Guard And Parry Montage", meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* GuardParryMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Avoid", meta = (AllowPrivateAccess = "true"))
+	float AvoidTime = 0.3f;
+
 	int HitIndex;
 
 	FVector HitPoint;
@@ -166,6 +178,26 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE FVector GetHitPoint() const { return HitPoint; }
+
+	UFUNCTION(BlueprintCallable)
+	UAnimMontage* GetGuardBreakMontage() const;
+
+	UFUNCTION(BlueprintCallable)
+	UAnimMontage* GetGuardMontage() const;
+
+	UFUNCTION(BlueprintCallable)
+	UAnimMontage* GetGuardParryMontage() const;
+
+	virtual void GuardBreak();
+
+	virtual void CounterParry();
+
+	void CounterTagAttach();
+
+	void CounterTagDeattach();
+
+	UFUNCTION(BlueprintCallable)
+	void ChangeCollision();
 
 protected:
 	// Called when the game starts or when spawned

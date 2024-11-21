@@ -11,6 +11,9 @@
 #include "../Character/PlayerCharacter.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "KismetAnimationLibrary.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "../GAS/SoluslikeAbilitySystemComponent.h"
 
 // Sets default values for this component's properties
 UWeaponComponent::UWeaponComponent()
@@ -138,7 +141,25 @@ void UWeaponComponent::WeaponAttackStart()
 {
 	if (ABaseCharacter*Owner = Cast<ABaseCharacter>(GetOwner()))
 	{
-		Owner->AbilityActivateWithTag("Action.Attack");
+		if (CurrentWeapon.Weapon != nullptr && CurrentWeapon.DataAsset != nullptr)
+		{
+			Owner->AbilityActivateWithTag("Action.Attack");
+		}
+		else
+		{
+			return;
+		}
+	}
+}
+
+void UWeaponComponent::ExecutiomStart()
+{
+	if (IsValid(CurrentWeapon.Weapon) && IsValid(CurrentWeapon.DataAsset))
+	{
+		if (ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwner()))
+		{
+			Owner->AbilityActivateWithTag("Action.Execution");
+		}
 	}
 }
 
@@ -164,7 +185,14 @@ void UWeaponComponent::WeaponColliison()
 			{
 				if (HitActor->GetWeaponComponent()->AttackGuardCheck(Location))
 				{
-					SendEvent(HitActor, "Event.AttackGuard");
+					if (!(HitActor->TagCountCheak("State.ParryAble.Guard")))
+					{
+						SendEvent(HitActor, "Event.Hit.GuardParry");
+					}
+					else
+					{
+						SendEvent(HitActor, "Event.Hit.Guard");
+					}
 				}
 				else
 				{
@@ -175,14 +203,29 @@ void UWeaponComponent::WeaponColliison()
 					{
 						HitActor->GetWeaponComponent()->CurrentShield->ShieldSizeChange(false);
 					}
-					SendEvent(HitActor, "Event.AttackHit");
+					SendEvent(HitActor, "Event.Hit.Normal");
 				}
 			}
+
+			else if (!(HitActor->TagCountCheak("State.ParryAble.Counter")))
+			{
+				if (AttackCounterCheck(HitActor))
+				{
+					SendEvent(HitActor, "Event.Hit.CounterParry");
+				}
+				else
+				{
+					HitActor->HitMontageIndexCalculate(ImpactPoint);
+					HitActor->HitVectorCalculate(ImpactPoint);
+					SendEvent(HitActor, "Event.Hit.Normal");
+				}
+			}
+
 			else
 			{
 				HitActor->HitMontageIndexCalculate(ImpactPoint);
 				HitActor->HitVectorCalculate(ImpactPoint);
-				SendEvent(HitActor, "Event.AttackHit");
+				SendEvent(HitActor, "Event.Hit.Normal");
 			}
 		}
 	}
@@ -196,7 +239,7 @@ bool UWeaponComponent::AttackGuardCheck(FVector Loc)
 		
 		float Drection = UKismetAnimationLibrary::CalculateDirection(Location, GetOwner()->GetActorRotation());
 
-		if (FMath::Abs(Drection) <= 50.0f)
+		if (FMath::Abs(Drection) <= 45.0f)
 		{
 			return true;
 		}
@@ -208,6 +251,62 @@ bool UWeaponComponent::AttackGuardCheck(FVector Loc)
 	else
 	{
 		return false;
+	}
+}
+
+bool UWeaponComponent::AttackCounterCheck(ABaseCharacter* Target)
+{
+	FRotator TargetRot = Target->GetActorRotation();
+	FRotator OwnerRot = GetOwner()->GetActorRotation();
+
+	float ParryRot = FMath::Abs(TargetRot.Yaw - OwnerRot.Yaw);
+
+	if (ParryRot >= 130.f && ParryRot <= 230.f)
+	{
+		Target->CounterTagAttach();
+		return true;
+	}
+
+	else
+	{
+		return false;
+	}
+}
+
+AActor* UWeaponComponent::ExecutionTraceOn()
+{
+	// 충돌 결과
+	FHitResult HitResult;
+	bool Succes = false;
+	FVector Start = GetOwner()->GetActorLocation();
+	FVector End = Start + GetOwner()->GetActorForwardVector() * 80.0f;
+
+	//ABaseCharacter* HitChar;
+
+	// 충돌 검사할 오브젝트 타입
+	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
+	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECollisionChannel::ECC_GameTraceChannel2));
+
+	// 무시할 객체
+	TArray<AActor*> ActorsToIgnore;
+	ActorsToIgnore.Add(Cast<AActor>(GetOwner()));
+
+	Succes = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true);
+
+	if (Succes)
+	{
+		//HitChar = Cast<ABaseCharacter>(HitResult.GetActor());
+		FVector ExceutionLocation = HitResult.ImpactPoint - (GetOwner()->GetActorForwardVector() * 80.0f);
+
+		FRotator Rot = UKismetMathLibrary::FindLookAtRotation(HitResult.GetActor()->GetActorLocation(), GetOwner()->GetActorLocation());
+
+		GetOwner()->SetActorLocation(ExceutionLocation);
+		//HitChar->SetActorRotation(Rot);
+		return HitResult.GetActor();
+	}
+	else
+	{
+		return nullptr;
 	}
 }
 

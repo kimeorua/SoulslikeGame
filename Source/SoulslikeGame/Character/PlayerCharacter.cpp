@@ -74,6 +74,8 @@ void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 		EnhancedInputComponent->BindAction(SecondWeaponSelectAction, ETriggerEvent::Started, this, &APlayerCharacter::SelectSecondWeapon);
 
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &APlayerCharacter::Attack);
+
+		EnhancedInputComponent->BindAction(CounterParryAction, ETriggerEvent::Started, this, &APlayerCharacter::CounterParry);
 	}
 }
 
@@ -94,7 +96,7 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 		// add movement 
-		if (TagCountCheak("Action.Avoid") && TagCountCheak("Action.Attack.Jump"))
+		if (TagCountCheak("Action.Avoid") && TagCountCheak("Action.Attack.Jump") && TagCountCheak("Action.GuardBreak"))
 		{
 			AddMovementInput(ForwardDirection, MovementVector.Y);
 			AddMovementInput(RightDirection, MovementVector.X);
@@ -129,30 +131,12 @@ void APlayerCharacter::DashEnd()
 
 void APlayerCharacter::JumpStart()
 {
-	if (IsJumpAble())
-	{
-		if (!JumpLock)
-		{
-			JumpLock = true;
-			Jump();
-		}
-	}
+	AbilityActivateWithTag("Action.Jump");
 }
 
 void APlayerCharacter::JumpEnd()
 {
 	StopJumping();
-}
-
-void APlayerCharacter::JumpLockReSet()
-{
-	FTimerHandle JumpTimerHandle;
-	GetWorldTimerManager().SetTimer(JumpTimerHandle, FTimerDelegate::CreateLambda([this]() {JumpLock = false; }), JumpDelay, false);
-}
-
-bool APlayerCharacter::IsJumpAble()
-{
-	return (TagCountCheak("Action.Avoid") && TagCountCheak("Action.Attack") && TagCountCheak("Action.Shield"));
 }
 
 void APlayerCharacter::Avoid()
@@ -199,4 +183,15 @@ void APlayerCharacter::SetBoss(AEnemyCharacter* Boss)
 	}
 }
 
+void APlayerCharacter::GuardBreak()
+{
+	if (!(TagCountCheak("Action.Shield")))
+	{
+		Super::GuardBreak();
+	}
+}
 
+void APlayerCharacter::CounterParry()
+{
+	Super::CounterParry();
+}

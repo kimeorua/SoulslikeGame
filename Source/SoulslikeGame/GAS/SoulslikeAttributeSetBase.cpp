@@ -4,6 +4,7 @@
 #include "SoulslikeAttributeSetBase.h"
 #include "Net/UnrealNetwork.h"
 #include "GameplayEffectExtension.h"
+#include "../Character/BaseCharacter.h"
 
 void USoulslikeAttributeSetBase::OnRep_Health(const FGameplayAttributeData& OldHealth)
 {
@@ -89,13 +90,10 @@ void USoulslikeAttributeSetBase::GetLifetimeReplicatedProps(TArray<FLifetimeProp
 
 void USoulslikeAttributeSetBase::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
 {
-	UE_LOG(LogTemp, Warning, TEXT("PreAttributeChange %s, %f"), *Attribute.AttributeName, NewValue);
 }
 
 void USoulslikeAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s: PostGameplayEffectExecute: %s"), *GetOwningActor()->GetName(), *Data.EvaluatedData.Attribute.AttributeName);
-
 	if (Data.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxStat()));
@@ -128,6 +126,12 @@ void USoulslikeAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffect
 	}
 	else if (Data.EvaluatedData.Attribute == GetSPAttribute())
 	{
+		if (GetSP() <= 0) 
+		{
+			ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwningActor());
+			UE_LOG(LogTemp, Warning, TEXT("Fuck : %s"), *Owner->GetName());
+			Owner->GuardBreak();
+		}
 		SetSP(FMath::Clamp(GetSP(), 0.0f, GetMaxSP()));
 	}
 	else if (Data.EvaluatedData.Attribute == GetManaAttribute())

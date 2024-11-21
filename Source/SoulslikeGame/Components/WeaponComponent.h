@@ -101,9 +101,16 @@ public:
 
 	void WeaponAttackStart();
 
+	void ExecutiomStart();
+
 	float GetBaseDamage() const ;
 
 	void SendEvent(class ABaseCharacter* Target, FString Tag);
 
 	bool AttackGuardCheck(FVector Loc);
+
+	bool AttackCounterCheck(ABaseCharacter* Target);
+
+	UFUNCTION(BlueprintCallable)
+	class AActor* ExecutionTraceOn();
 };

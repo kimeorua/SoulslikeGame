@@ -126,6 +126,59 @@ void ABaseCharacter::HitVectorCalculate(FVector ImpactPoint)
 	HitPoint = ImpactPoint;
 }
 
+UAnimMontage* ABaseCharacter::GetGuardBreakMontage() const
+{
+	return IsValid(GuardBreakMontage) ? GuardBreakMontage : nullptr;
+}
+
+UAnimMontage* ABaseCharacter::GetGuardMontage() const
+{
+	return IsValid(GuardBreakMontage) ? GuardMontage : nullptr;
+}
+
+UAnimMontage* ABaseCharacter::GetGuardParryMontage() const
+{
+	return IsValid(GuardBreakMontage) ? GuardParryMontage : nullptr;
+}
+
+void ABaseCharacter::GuardBreak()
+{
+	AbilityActivateWithTag("Action.GuardBreak");
+}
+
+void ABaseCharacter::CounterParry()
+{
+	AbilityActivateWithTag("Action.CounterParry");
+}
+
+void ABaseCharacter::CounterTagDeattach()
+{
+	if (IsValid(GetAbilitySystemComponent()))
+	{
+		GetAbilitySystemComponent()->RemoveLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.ExecutionAble")));
+	}
+}
+
+void ABaseCharacter::ChangeCollision()
+{
+	CombetColliison->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
+
+	FTimerHandle JumpTimerHandle;
+	GetWorldTimerManager().SetTimer(JumpTimerHandle, FTimerDelegate::CreateLambda([this]() {CombetColliison->SetCollisionObjectType((ECollisionChannel::ECC_GameTraceChannel2)); }), AvoidTime, false);
+}
+
+void ABaseCharacter::CounterTagAttach()
+{
+	if (IsValid(GetAbilitySystemComponent()))
+	{
+		GetAbilitySystemComponent()->AddLooseGameplayTag(FGameplayTag::RequestGameplayTag(FName("State.ExecutionAble")));
+
+		FTimerHandle TagRemoveHandle;
+
+		GetWorldTimerManager().SetTimer(TagRemoveHandle, this, &ABaseCharacter::CounterTagDeattach, 3.0f, false);
+	}
+}
+
 // Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
 {
@@ -175,7 +228,14 @@ bool ABaseCharacter::TagCountCheak(FName Tag)
 
 void ABaseCharacter::Attack()
 {
-	GetWeaponComponent()->WeaponAttackStart();
+	if (TagCountCheak("State.ExecutionAble"))
+	{
+		GetWeaponComponent()->WeaponAttackStart();
+	}
+	else
+	{
+		GetWeaponComponent()->ExecutiomStart();
+	}
 }
 
 float ABaseCharacter::GetWeaponBaseDamage() const

@@ -39,6 +39,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack", meta = (AllowPrivateAccess = "true"))
 	FAttackMontages AttackMontages;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Execution", meta = (AllowPrivateAccess = "true"))
+	FAttackMontages ExecutionMontages;
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Attack | Collision", meta = (AllowPrivateAccess = "true"))
 	FCollisionData CollisionData;
 
@@ -61,6 +64,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE FAttackMontages GetAttackMontages() const { return AttackMontages; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE FAttackMontages GetExecutionMontage() const { return ExecutionMontages; }
 
 	FORCEINLINE FCollisionData GetCollisionData() const { return CollisionData; }
 

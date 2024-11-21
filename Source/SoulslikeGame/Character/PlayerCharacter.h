@@ -60,12 +60,9 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Action", meta = (AllowPrivateAccess = "true"))
 	class UInputAction* AttackAction;
 
-	// 점프 딜레이
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Jump", meta = (AllowPrivateAccess = "true"))
-	float JumpDelay;
-
-	// 점프 잠금 여부
-	bool JumpLock;
+	// 카운터 패링
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Input | Action", meta = (AllowPrivateAccess = "true"))
+	class UInputAction* CounterParryAction;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Boss", meta = (AllowPrivateAccess = "true"))
 	class AEnemyCharacter* CombetBoss = nullptr;
@@ -120,17 +117,6 @@ public:
 	void JumpEnd();
 
 	/// <summary>
-	/// 점프 타이머 작동
-	/// </summary>
-	UFUNCTION(BlueprintCallable)
-	void JumpLockReSet();
-
-	/// <summary>
-	/// 점프 가능 여부 판단 -> GameplayTag를 통해 제어
-	/// </summary>
-	bool IsJumpAble();
-
-	/// <summary>
 	/// 카메라 컴포넌트 반환
 	/// </summary>
 	/// <returns>FollowCamera</returns>
@@ -165,8 +151,12 @@ public:
 
 	void SetBoss(class AEnemyCharacter* Boss);
 
+	virtual void GuardBreak() override;
+
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetBossUI(class AEnemyCharacter* Boss);
+
+	virtual void CounterParry() override;
 
 protected:
 	/// <summary>

@@ -44,3 +44,8 @@ void AEnemyCharacter::LockOnUI_On_Off(bool OnOff)
 {
 	LockOnUI->bHiddenInGame = !OnOff;
 }
+
+void AEnemyCharacter::GuardBreak()
+{
+	Super::GuardBreak();
+}
