@@ -4,17 +4,22 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
+#include "GenericTeamAgentInterface.h"
 #include "PlayerCharacter.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SOULSLIKEGAME_API APlayerCharacter : public ABaseCharacter
+class SOULSLIKEGAME_API APlayerCharacter : public ABaseCharacter, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 	
 private:
+
+	FGenericTeamId TeamId;
+
+	virtual FORCEINLINE FGenericTeamId GetGenericTeamId() const  { return TeamId; } ;
 
 	//카메라가 달릴 스프링 암
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))

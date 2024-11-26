@@ -28,7 +28,7 @@ AEnemyCharacter::AEnemyCharacter()
 
 void AEnemyCharacter::WeaponSetting()
 {
-	GetWeaponComponent()->WeaponSelect(EWeaponType::Axe);
+	GetWeaponComponent()->WeaponSelect(Type);
 
 	AbilityActivateWithTag("Action.Equip");
 }

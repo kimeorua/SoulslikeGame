@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BaseCharacter.h"
+#include "../Enums.h"
 #include "EnemyCharacter.generated.h"
 
 /**
@@ -22,6 +23,9 @@ private:
 	// 락온 UI
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lock On UI", meta = (AllowPrivateAccess = "true"))
 	class UWidgetComponent* LockOnUI;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "WeaponType | Default", meta = (AllowPrivateAccess = "true"))
+	EWeaponType Type;
 
 public:
 	AEnemyCharacter();

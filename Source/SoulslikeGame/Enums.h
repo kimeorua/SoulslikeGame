@@ -24,6 +24,16 @@ enum class ETraceType : uint8
 	Max UMETA(DisplayName = "Max")
 };
 
+UENUM(BlueprintType)
+enum class EAIState : uint8
+{
+	None = 0 UMETA(DisplayName = "None"),
+	Intro UMETA(DisplayName = "Intro"),
+	Idle UMETA(DisplayName = "Idle"),
+
+	Max UMETA(DisplayName = "Max")
+};
+
 USTRUCT(BlueprintType)
 struct FEquipMontages
 {
