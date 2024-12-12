@@ -36,6 +36,9 @@ public:
 
 	virtual void GuardBreak() override;
 
+	UFUNCTION(BlueprintCallable)
+	void EnemyLockOff();
+
 protected:
 	/// <summary>
 	/// 게임 시작 시 호출

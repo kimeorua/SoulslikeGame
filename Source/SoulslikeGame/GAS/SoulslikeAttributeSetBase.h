@@ -34,7 +34,7 @@ public:
 	FGameplayAttributeData Strength;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, Strength)
 
-	//재능 스탯(스킬 데미지/회복량) 1p 당 7 증가 / 1p당 1증가 
+	//재능 스탯(회복량)  1p당 1증가 
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute", ReplicatedUsing = OnRep_Talent)
 	FGameplayAttributeData Talent;
 	ATTRIBUTE_ACCESSORS(USoulslikeAttributeSetBase, Talent)

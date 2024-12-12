@@ -119,17 +119,19 @@ void USoulslikeAttributeSetBase::PostGameplayEffectExecute(const FGameplayEffect
 	else if (Data.EvaluatedData.Attribute == GetHPAttribute())
 	{
 		SetHP(FMath::Clamp(GetHP(), 0.0f, GetMaxHP()));
-	}
-	else if (Data.EvaluatedData.Attribute == GetHPAttribute())
-	{
-		SetHP(FMath::Clamp(GetHP(), 0.0f, GetMaxHP()));
+		if (GetHP() <= 0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Die"));
+
+			ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwningActor());
+			Owner->CharacterDie();
+		}
 	}
 	else if (Data.EvaluatedData.Attribute == GetSPAttribute())
 	{
 		if (GetSP() <= 0) 
 		{
 			ABaseCharacter* Owner = Cast<ABaseCharacter>(GetOwningActor());
-			UE_LOG(LogTemp, Warning, TEXT("Fuck : %s"), *Owner->GetName());
 			Owner->GuardBreak();
 		}
 		SetSP(FMath::Clamp(GetSP(), 0.0f, GetMaxSP()));

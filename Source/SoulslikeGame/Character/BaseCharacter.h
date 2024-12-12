@@ -197,7 +197,12 @@ public:
 	void CounterTagDeattach();
 
 	UFUNCTION(BlueprintCallable)
-	void ChangeCollision();
+	void ChangeCollision(bool type = false);
+
+	void CharacterDie();
+
+	UFUNCTION(BlueprintCallable)
+	void VisibleOff();
 
 protected:
 	// Called when the game starts or when spawned

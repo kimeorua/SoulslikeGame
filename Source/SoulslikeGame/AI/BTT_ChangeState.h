@@ -5,26 +5,21 @@
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
 #include "../Enums.h"
-#include "BTT_ActivateAbility.generated.h"
+#include "BTT_ChangeState.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SOULSLIKEGAME_API UBTT_ActivateAbility : public UBTTaskNode
+class SOULSLIKEGAME_API UBTT_ChangeState : public UBTTaskNode
 {
 	GENERATED_BODY()
 	
-private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
-	FGameplayTagContainer TagContainer;
+	EAIState State;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Value", meta = (AllowPrivateAccess = "true"))
-	EAIState EndState;
-
-	UBTT_ActivateAbility();
+	UBTT_ChangeState();
 
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
-	virtual void TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 };

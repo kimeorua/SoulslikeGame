@@ -168,7 +168,7 @@ float UWeaponComponent::GetBaseDamage() const
 	return IsValid(CurrentWeapon.DataAsset) ? CurrentWeapon.DataAsset->GetBaseDamage() : 0.0f;
 }
 
-void UWeaponComponent::WeaponColliison()
+void UWeaponComponent::WeaponColliison(EAttackType Type)
 {
 	if (IsValid(CurrentWeapon.Weapon) && IsValid(CurrentWeapon.DataAsset))
 	{
@@ -181,8 +181,16 @@ void UWeaponComponent::WeaponColliison()
 
 		if (Succes && IsValid(HitActor))
 		{
-			if (!(HitActor->TagCountCheak("Action.Shield")))
+			HitActor->ChangeCollision(true);
+
+			switch (Type)
 			{
+			case EAttackType::None:
+				HitActor->HitMontageIndexCalculate(ImpactPoint);
+				HitActor->HitVectorCalculate(ImpactPoint);
+				SendEvent(HitActor, "Event.Hit.Normal");
+				break;
+			case EAttackType::Normal:
 				if (HitActor->GetWeaponComponent()->AttackGuardCheck(Location))
 				{
 					if (!(HitActor->TagCountCheak("State.ParryAble.Guard")))
@@ -196,22 +204,59 @@ void UWeaponComponent::WeaponColliison()
 				}
 				else
 				{
-					HitActor->HitMontageIndexCalculate(ImpactPoint);
-					HitActor->HitVectorCalculate(ImpactPoint);
-
 					if (IsValid(HitActor->GetWeaponComponent()->CurrentShield))
 					{
 						HitActor->GetWeaponComponent()->CurrentShield->ShieldSizeChange(false);
 					}
+					HitActor->HitMontageIndexCalculate(ImpactPoint);
+					HitActor->HitVectorCalculate(ImpactPoint);
 					SendEvent(HitActor, "Event.Hit.Normal");
 				}
-			}
-
-			else if (!(HitActor->TagCountCheak("State.ParryAble.Counter")))
-			{
-				if (AttackCounterCheck(HitActor))
+				break;
+			case EAttackType::GuardParryOnly:
+				if (HitActor->GetWeaponComponent()->AttackGuardCheck(Location))
 				{
-					SendEvent(HitActor, "Event.Hit.CounterParry");
+					if (!(HitActor->TagCountCheak("State.ParryAble.Guard")))
+					{
+						SendEvent(HitActor, "Event.Hit.GuardParry");
+					}
+					else
+					{
+						if (IsValid(HitActor->GetWeaponComponent()->CurrentShield))
+						{
+							HitActor->GetWeaponComponent()->CurrentShield->ShieldSizeChange(false);
+						}
+						HitActor->HitMontageIndexCalculate(ImpactPoint);
+						HitActor->HitVectorCalculate(ImpactPoint);
+						SendEvent(HitActor, "Event.Hit.Normal");
+					}
+				}
+				else
+				{
+					if (IsValid(HitActor->GetWeaponComponent()->CurrentShield))
+					{
+						HitActor->GetWeaponComponent()->CurrentShield->ShieldSizeChange(false);
+					}
+					HitActor->HitMontageIndexCalculate(ImpactPoint);
+					HitActor->HitVectorCalculate(ImpactPoint);
+
+					SendEvent(HitActor, "Event.Hit.Normal");
+				}
+
+				break;
+			case EAttackType::CounterParryOnly:
+				if (!(HitActor->TagCountCheak("State.ParryAble.Counter")))
+				{
+					if (AttackCounterCheck(HitActor))
+					{
+						SendEvent(HitActor, "Event.Hit.CounterParry");
+					}
+					else
+					{
+						HitActor->HitMontageIndexCalculate(ImpactPoint);
+						HitActor->HitVectorCalculate(ImpactPoint);
+						SendEvent(HitActor, "Event.Hit.Normal");
+					}
 				}
 				else
 				{
@@ -219,13 +264,12 @@ void UWeaponComponent::WeaponColliison()
 					HitActor->HitVectorCalculate(ImpactPoint);
 					SendEvent(HitActor, "Event.Hit.Normal");
 				}
-			}
+				break;
 
-			else
-			{
-				HitActor->HitMontageIndexCalculate(ImpactPoint);
-				HitActor->HitVectorCalculate(ImpactPoint);
-				SendEvent(HitActor, "Event.Hit.Normal");
+			case EAttackType::Max:
+				break;
+			default:
+				break;
 			}
 		}
 	}
@@ -233,7 +277,8 @@ void UWeaponComponent::WeaponColliison()
 
 bool UWeaponComponent::AttackGuardCheck(FVector Loc)
 {
-	if (IsValid(CurrentShield))
+	ABaseCharacter* Owner = CastChecked<ABaseCharacter>(GetOwner());
+	if (IsValid(CurrentShield) && !Owner->TagCountCheak("Action.Shield"))
 	{
 		FVector Location = Loc - GetOwner()->GetActorLocation();
 		
@@ -291,7 +336,7 @@ AActor* UWeaponComponent::ExecutionTraceOn()
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(Cast<AActor>(GetOwner()));
 
-	Succes = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true);
+	Succes = UKismetSystemLibrary::LineTraceSingleForObjects(GetWorld(), Start, End, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
 
 	if (Succes)
 	{
@@ -307,6 +352,20 @@ AActor* UWeaponComponent::ExecutionTraceOn()
 	else
 	{
 		return nullptr;
+	}
+}
+
+void UWeaponComponent::VisibleOff()
+{
+	for (auto T : Weapons)
+	{
+		AWeapon* Weapon = T.Value;
+		Weapon->GetMesh()->SetVisibility(false);
+	}
+
+	if (CurrentShield)
+	{
+		CurrentShield->GetMesh()->SetVisibility(false);
 	}
 }
 

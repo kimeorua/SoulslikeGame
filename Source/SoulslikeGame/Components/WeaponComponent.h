@@ -97,7 +97,7 @@ public:
 	void UnequipWeapon();
 
 	UFUNCTION(BlueprintCallable)
-	void WeaponColliison();
+	void WeaponColliison(EAttackType Type);
 
 	void WeaponAttackStart();
 
@@ -113,4 +113,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	class AActor* ExecutionTraceOn();
+
+	void VisibleOff();
 };

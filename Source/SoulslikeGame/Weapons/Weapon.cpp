@@ -4,6 +4,7 @@
 #include "Weapon.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/GameplayStatics.h"
 #include "../Enums.h"
 #include "../Character/BaseCharacter.h"
 
@@ -48,11 +49,11 @@ TTuple<bool, ABaseCharacter*, FVector, FVector> AWeapon::TraceOn(FCollisionData 
 		break;
 
 	case ETraceType::Sphere:
-		Succes = UKismetSystemLibrary::SphereTraceSingleForObjects(GetWorld(), StartLocation, EndLocation, CollisionData.Size, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true);
+		Succes = UKismetSystemLibrary::SphereTraceSingleForObjects(GetWorld(), StartLocation, EndLocation, CollisionData.Size, ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
 		break;
 
 	case ETraceType::Box:
-		Succes = UKismetSystemLibrary::BoxTraceSingleForObjects(GetWorld(), StartLocation, EndLocation, Size, GetActorRotation(), ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true);
+		Succes = UKismetSystemLibrary::BoxTraceSingleForObjects(GetWorld(), StartLocation, EndLocation, Size, GetActorRotation(), ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
 		break;
 
 	case ETraceType::Max:

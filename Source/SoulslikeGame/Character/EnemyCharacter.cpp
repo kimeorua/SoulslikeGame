@@ -10,6 +10,9 @@
 #include "Components/WidgetComponent.h"
 #include "../Weapons/Weapon.h"
 #include "../DataAsset/WeaponDataAsset.h"
+#include "../AI/EnemyAIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "../Character/PlayerCharacter.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -48,4 +51,11 @@ void AEnemyCharacter::LockOnUI_On_Off(bool OnOff)
 void AEnemyCharacter::GuardBreak()
 {
 	Super::GuardBreak();
+}
+
+void AEnemyCharacter::EnemyLockOff()
+{
+	AEnemyAIController* AI = Cast<AEnemyAIController>(GetController());
+	APlayerCharacter* Player = Cast<APlayerCharacter>(AI->GetBlackboardComponent()->GetValueAsObject(AI->TargetActor));
+	Player->GetLockOnComponent()->StopTargetLockOn();
 }

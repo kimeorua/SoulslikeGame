@@ -43,7 +43,6 @@ AEnemyCharacter* ULockOnComponent::TraceForTarget()
 	if (Succes)
 	{
 		HitActor = Cast<AEnemyCharacter>(HitResult.GetActor());
-		HitActor->LockOnUI_On_Off(true);
 		return HitActor;
 	}
 	else
@@ -105,6 +104,7 @@ void ULockOnComponent::TriggerTargetLockOn()
 			if (CheackTarget(TraceForTarget()))
 			{
 				LockOnActor = TraceForTarget();
+				LockOnActor->LockOnUI_On_Off(true);
 				//타이머를 통해, 자연스러운 카메라 무브
 				GetWorld()->GetTimerManager().SetTimer(LockOnHandle, this, &ULockOnComponent::TargetLockOn, GetWorld()->GetDeltaSeconds(), true);
 			}

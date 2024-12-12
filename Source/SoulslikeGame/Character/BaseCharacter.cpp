@@ -159,12 +159,34 @@ void ABaseCharacter::CounterTagDeattach()
 	}
 }
 
-void ABaseCharacter::ChangeCollision()
+void ABaseCharacter::ChangeCollision(bool type)
 {
 	CombetColliison->SetCollisionObjectType(ECollisionChannel::ECC_Pawn);
 
 	FTimerHandle JumpTimerHandle;
-	GetWorldTimerManager().SetTimer(JumpTimerHandle, FTimerDelegate::CreateLambda([this]() {CombetColliison->SetCollisionObjectType((ECollisionChannel::ECC_GameTraceChannel2)); }), AvoidTime, false);
+	if (type)
+	{
+		GetWorldTimerManager().SetTimer(JumpTimerHandle, FTimerDelegate::CreateLambda([this]() {CombetColliison->SetCollisionObjectType((ECollisionChannel::ECC_GameTraceChannel2)); }), 0.2, false);
+	}
+	else 
+	{
+		GetWorldTimerManager().SetTimer(JumpTimerHandle, FTimerDelegate::CreateLambda([this]() {CombetColliison->SetCollisionObjectType((ECollisionChannel::ECC_GameTraceChannel2)); }), AvoidTime, false);
+	}
+}
+
+void ABaseCharacter::CharacterDie()
+{
+	AbilityActivateWithTag("Die");
+}
+
+void ABaseCharacter::VisibleOff()
+{
+	GetMesh()->SetVisibility(false);
+
+	if (WeaponComponent)
+	{
+		WeaponComponent->VisibleOff();
+	}
 }
 
 void ABaseCharacter::CounterTagAttach()

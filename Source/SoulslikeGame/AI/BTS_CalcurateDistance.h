@@ -10,7 +10,7 @@
  * 
  */
 UCLASS()
-class SOULSLIKEGAME_API UBTS_CalcurateDistance : public UBTService_BlackboardBase
+class SOULSLIKEGAME_API UBTS_CalcurateDistance : public UBTService
 {
 	GENERATED_BODY()
 

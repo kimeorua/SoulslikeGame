@@ -98,7 +98,7 @@ void APlayerCharacter::Move(const FInputActionValue& Value)
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
 		// add movement 
-		if (TagCountCheak("Action.Avoid") && TagCountCheak("Action.Attack.Jump") && TagCountCheak("Action.GuardBreak"))
+		if (TagCountCheak("Action.Avoid") && TagCountCheak("Action.Attack.Jump") && TagCountCheak("Action.GuardBreak") && TagCountCheak("State.Hit.Guard"))
 		{
 			AddMovementInput(ForwardDirection, MovementVector.Y);
 			AddMovementInput(RightDirection, MovementVector.X);

@@ -47,7 +47,7 @@ void ABossRoom::ActivateCollision()
 		TArray<AActor*> ActorsToIgnore;
 		ActorsToIgnore.Add(Cast<AActor>(Boss));
 
-		bool Succes = UKismetSystemLibrary::BoxTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation(), Size, GetActorRotation(), ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::ForDuration, HitResult, true);
+		bool Succes = UKismetSystemLibrary::BoxTraceSingleForObjects(GetWorld(), GetActorLocation(), GetActorLocation(), Size, GetActorRotation(), ObjectTypes, false, ActorsToIgnore, EDrawDebugTrace::None, HitResult, true);
 		if (Succes)
 		{
 			Player = Cast<APlayerCharacter>(HitResult.GetActor());

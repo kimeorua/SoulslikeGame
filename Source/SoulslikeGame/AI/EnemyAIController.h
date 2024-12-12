@@ -42,6 +42,7 @@ public:
 	static const FName AI_State;
 	static const FName ASC;
 	static const FName Distance;
+	static const FName Random;
 
 	//-------------------------------------------블랙보드 키에 접근시 사용할 이름들-------------------------------------------//
 

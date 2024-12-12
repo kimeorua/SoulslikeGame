@@ -30,9 +30,24 @@ enum class EAIState : uint8
 	None = 0 UMETA(DisplayName = "None"),
 	Intro UMETA(DisplayName = "Intro"),
 	Idle UMETA(DisplayName = "Idle"),
+	Aggro UMETA(DisplayName = "Aggro"),
+	Combet UMETA(DisplayName = "Combet"),
 
 	Max UMETA(DisplayName = "Max")
 };
+
+
+UENUM(BlueprintType)
+enum class EAttackType : uint8
+{
+	None = 0 UMETA(DisplayName = "None"),
+	Normal UMETA(DisplayName = "Normal"),
+	GuardParryOnly UMETA(DisplayName = "GuardParryOnly"),
+	CounterParryOnly UMETA(DisplayName = "CounterParryOnly"),
+
+	Max UMETA(DisplayName = "Max")
+};
+
 
 USTRUCT(BlueprintType)
 struct FEquipMontages

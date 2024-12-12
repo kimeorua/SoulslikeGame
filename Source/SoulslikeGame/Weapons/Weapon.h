@@ -7,6 +7,8 @@
 #include "../Enums.h"
 #include "Weapon.generated.h"
 
+class UParticleSystemComponent;
+
 /**
  * 
  */
@@ -19,8 +21,13 @@ private:
 	UPROPERTY(Category = Character, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class USkeletalMeshComponent* Mesh;
 
+	UPROPERTY(Category = "Particle", VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UParticleSystemComponent* TrailParticle;
+
 public:
 	AWeapon();
+
+	FORCEINLINE USkeletalMeshComponent* GetMesh() const { return Mesh; }
 
 	virtual void BeginPlay() override;
 

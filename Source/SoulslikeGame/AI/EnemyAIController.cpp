@@ -23,6 +23,7 @@ const FName AEnemyAIController::SelfActor(TEXT("SelfActor"));
 const FName AEnemyAIController::AI_State(TEXT("AI_State"));
 const FName AEnemyAIController::ASC(TEXT("ASC"));
 const FName AEnemyAIController::Distance(TEXT("Distance"));
+const FName AEnemyAIController::Random(TEXT("Random"));
 
 AEnemyAIController::AEnemyAIController()
 {

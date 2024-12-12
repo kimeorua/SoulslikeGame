@@ -43,8 +43,10 @@ void USoulslikeAnimInstance::SettingVlaue()
 	if (IsValid(MovementComponent))
 	{
 		Speed = UKismetMathLibrary::VSizeXY(MovementComponent->Velocity);
+
 		FRotator Rot = FRotator(0.0f, Character->GetActorRotation().Yaw, 0);
 		Direction = UKismetAnimationLibrary::CalculateDirection(MovementComponent->Velocity, Rot);
+
 		IsAccelerating = UKismetMathLibrary::VSize(MovementComponent->GetCurrentAcceleration()) > 0 ? true : false;
 		IsAir = MovementComponent->IsFalling();
 

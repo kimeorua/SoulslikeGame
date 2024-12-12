@@ -29,6 +29,8 @@ private:
 public:
 	AShield();
 
+	FORCEINLINE UStaticMeshComponent* GetMesh() const { return Mesh; }
+
 	virtual void BeginPlay() override;
 
 	virtual void Attach(FName Socket)override;
