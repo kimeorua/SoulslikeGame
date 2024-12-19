@@ -254,3 +254,9 @@ void UExec_Cal_ApplyDamamge::Execute_Implementation(const FGameplayEffectCustomE
 + #### 데미지 GameplayEffect가 작동되면, 해당 수식을 통해 계산 함
 + #### 공격 한 객체의 각 스탯을 가져와 치명타 여부와, 총 데미지를 계산함.
 + #### 공격 받은 객체의 HP를 감소 시키고 보스 캐릭터는 추가로 SP를 받은 데미지에 비례하여 감소 시킴.
+
+## 5. 후기
++ ### GAS를 활용하여 게임을 제작 하면서 저번에 사용할때는 사용하지 않았던 MagnitudeCalculation와 같은 클래스를 작성 해보았고, 그로 인하여, GAS에서 특정 수치를 계산할때 어떠한 방식으로 진행되는지 알게 됨.
++ ### AttributeChangeAsyncTask 클래스를 작성하여, Listen을 통해 Attribute값이 변경될때 델리게이트를 통하여, 특정 기능을 수행하는 방법을 알게 됨.
++ ### 여태까지 알던 정보가 매우 적은 양이였다는 것을 깨닫고 추가적으로 GAS에 대하여 공부를 하기로 하였으며, 1월 내로 Udemy에서 신청한 강좌를 듣고 새로운 게임을 제작 해볼 계획을 수립함.
+ 
